@@ -73,5 +73,11 @@
   "color-danger-transparent-300": "rgba(254, 80, 80, 0.24)",
   "color-danger-transparent-400": "rgba(254, 80, 80, 0.32)",
   "color-danger-transparent-500": "rgba(254, 80, 80, 0.4)",
-  "color-danger-transparent-600": "rgba(254, 80, 80, 0.48)"
+  "color-danger-transparent-600": "rgba(254, 80, 80, 0.48)",
+  "color-background-primary-500": "#DA9AFF",
+  "color-text": "#FFF",
+  "color-gray-400": "#F7F9FC",
+  "color-gray-500": "#E4E9F2",
+  "color-gray-600": "#8F9BB3",
+  "color-gray-800": "#222B45"
 }

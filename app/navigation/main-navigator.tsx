@@ -5,8 +5,9 @@
  * You'll likely spend most of your time in this file.
  */
 import React from "react"
-import { createStackNavigator } from "@react-navigation/stack"
+import { createStackNavigator, StackNavigationProp } from "@react-navigation/stack"
 import { WelcomeScreen, DemoScreen } from "../screens"
+import TabNavigator from "./tab-navigator"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -22,8 +23,9 @@ import { WelcomeScreen, DemoScreen } from "../screens"
  */
 export type PrimaryParamList = {
   welcome: undefined
-  demo: undefined
+  home: undefined
 }
+export type MainNavigatorType = StackNavigationProp<PrimaryParamList>;
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createStackNavigator<PrimaryParamList>()
@@ -36,7 +38,7 @@ export function MainNavigator() {
       }}
     >
       <Stack.Screen name="welcome" component={WelcomeScreen} />
-      <Stack.Screen name="demo" component={DemoScreen} />
+      <Stack.Screen name="home" component={TabNavigator} />
     </Stack.Navigator>
   )
 }
