@@ -7,6 +7,7 @@ import * as Animatable from 'react-native-animatable'
 
 import { Screen } from "../../components"
 import { color, spacing } from "../../theme"
+import { HapticButton } from "../../components/haptic-button/haptic-button"
 
 const donutImage = require("./donut.jpg")
 
@@ -23,7 +24,7 @@ export const WelcomeScreen = observer(function WelcomeScreen() {
           Welcome to Donut.
         </Text>
         <Text category='s1' style={styles.subtitle}>
-          The world's tastiest cryptocurrency wallet
+          The world's tastiest Ethereum wallet
         </Text>
         <Animatable.Image
           animation={{
@@ -42,7 +43,7 @@ export const WelcomeScreen = observer(function WelcomeScreen() {
         />
       </Screen>
       <SafeAreaView>
-        <Button size="large" onPress={goHome}>Continue</Button>
+        <HapticButton onPress={goHome} size="large">Continue</HapticButton>
       </SafeAreaView>
     </View>
   )
