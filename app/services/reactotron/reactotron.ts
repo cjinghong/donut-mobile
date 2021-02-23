@@ -6,6 +6,7 @@ import { ReactotronConfig, DEFAULT_REACTOTRON_CONFIG } from "./reactotron-config
 import { mst } from "reactotron-mst"
 import { clear } from "../../utils/storage"
 import { RootNavigation } from "../../navigation"
+import { NativeModules } from "react-native"
 
 // Teach TypeScript about the bad things we want to do.
 declare global {
@@ -64,11 +65,14 @@ export class Reactotron {
    * @param config the configuration
    */
   constructor(config: ReactotronConfig = DEFAULT_REACTOTRON_CONFIG) {
+    const scriptURL = NativeModules.SourceCode.scriptURL
+    const host = scriptURL.split('://')[1].split(':')[0]
+
     // merge the passed in config with some defaults
     this.config = {
-      host: "localhost",
       useAsyncStorage: true,
       ...config,
+      host,
       state: {
         initial: false,
         snapshots: false,

@@ -14,6 +14,9 @@ import "./utils/ignore-warnings"
 import React, { useState, useEffect, useRef } from "react"
 import { NavigationContainerRef } from "@react-navigation/native"
 import { SafeAreaProvider, initialWindowMetrics } from "react-native-safe-area-context"
+import * as eva from '@eva-design/eva'
+import { ApplicationProvider, IconRegistry } from '@ui-kitten/components'
+import { EvaIconsPack } from '@ui-kitten/eva-icons'
 import { initFonts } from "./theme/fonts" // expo
 import * as storage from "./utils/storage"
 import {
@@ -25,6 +28,7 @@ import {
 } from "./navigation"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models"
 import { ToggleStorybook } from "../storybook/toggle-storybook"
+import theme from './theme.json'
 
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
@@ -50,7 +54,7 @@ function App() {
 
   // Kick off initial async loading actions, like loading fonts and RootStore
   useEffect(() => {
-    ;(async () => {
+    (async () => {
       await initFonts() // expo
       setupRootStore().then(setRootStore)
     })()
@@ -66,6 +70,8 @@ function App() {
   return (
     <ToggleStorybook>
       <RootStoreProvider value={rootStore}>
+      <IconRegistry icons={[EvaIconsPack]} />
+      <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
         <SafeAreaProvider initialMetrics={initialWindowMetrics}>
           <RootNavigator
             ref={navigationRef}
@@ -73,6 +79,7 @@ function App() {
             onStateChange={onNavigationStateChange}
           />
         </SafeAreaProvider>
+        </ApplicationProvider>
       </RootStoreProvider>
     </ToggleStorybook>
   )
