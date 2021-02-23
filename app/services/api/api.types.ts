@@ -1,5 +1,8 @@
 import { GeneralApiProblem } from "./api-problem"
 
+export interface Balance {
+
+}
 export interface User {
   id: number
   name: string

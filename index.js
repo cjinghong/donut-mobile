@@ -7,8 +7,14 @@
 // side effect of breaking other tooling like mobile-center and react-native-rename.
 //
 // It's easier just to leave it here.
-import App from "./app/app.tsx"
 import { AppRegistry } from "react-native"
+import './shim.js'
+import crypto from 'crypto'
+
+import App from "./app/app.tsx"
+
+// import { getData } from './tokensdata'
+// getData()
 
 AppRegistry.registerComponent("Donut", () => App)
 export default App

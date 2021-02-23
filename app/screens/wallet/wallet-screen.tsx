@@ -1,8 +1,13 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { observer } from "mobx-react-lite"
 import { View } from "react-native"
-import { Screen, Wallpaper } from "../../components"
 import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
+import Web3 from 'web3'
+import { getAddressBalances } from 'eth-balance-checker/lib/web3'
+
+import { Screen, Wallpaper } from "../../components"
+import { Api } from "../../services/api"
+
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
 
@@ -13,8 +18,26 @@ export const WalletScreen = observer(function WalletScreen() {
 
   // Pull in navigation via hook
   // const navigation = useNavigation()
+
+  //   const api = new Api()
+  //   api.setup()
+
+  const web3 = new Web3(
+    new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws/v3/26afd41534b749d7bce517cb73fe0d9a")
+  )
+  const address = '0xCCc985a0EFC439D74af214EA26762c441A86d5A8'
+  const tokens = ['0x3845badAde8e6dFF049820680d1F14bD3903a5d0']
+
+  useEffect(() => {
+    getAddressBalances(web3, address, tokens).then(balances => {
+      console.log(balances)
+    }).catch((error) => {
+      console.log(error)
+    })
+  }, [])
+
   return (
-    <Screen style={styles.container} preset="fixed">
+    <Screen style={styles.container} preset="scroll">
       <Wallpaper />
       <View style={styles.card}>
         <Text category="h4">

@@ -11,14 +11,18 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		26E573B0BA0C44F08C3FB3DD /* ReactNativeGeth-tvOSTests.xctest in Frameworks */ = {isa = PBXBuildFile; fileRef = D746447BFA0C4425963CA48D /* ReactNativeGeth-tvOSTests.xctest */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* DonutTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* DonutTests.m */; };
+		4EA02E0325FA4DA8B33C5CCF /* ReactNativeGethTests.xctest in Frameworks */ = {isa = PBXBuildFile; fileRef = DEE7A3BF8967436E9A4084C9 /* ReactNativeGethTests.xctest */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		8DDFFF44F51441E2B2EF353C /* ReactNativeGeth.app in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D751C711C1C45C78321D60A /* ReactNativeGeth.app */; };
 		9F35C4F574E710F3E22269DC /* libPods-Donut-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3982FFE6B0255867763A9EDF /* libPods-Donut-tvOS.a */; };
 		A4B148D367B119F99EC2C2E5 /* libPods-Donut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EADEA568884090C1B008E181 /* libPods-Donut.a */; };
 		B9BE70BEF87ABACA22A7BCB6 /* libPods-Donut-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60796641CDFE67F015A69D88 /* libPods-Donut-tvOSTests.a */; };
+		CE0C319A487C426488088DE4 /* ReactNativeGeth-tvOS.app in Frameworks */ = {isa = PBXBuildFile; fileRef = E544F64BFEF64DCAA27E1E01 /* ReactNativeGeth-tvOS.app */; };
 		E0E402AF856107EC82190244 /* libPods-Donut-DonutTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 301BE758935A381A571F5B21 /* libPods-Donut-DonutTests.a */; };
 /* End PBXBuildFile section */
 
@@ -37,6 +41,34 @@
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
 			remoteInfo = "Donut-tvOS";
 		};
+		668D10F525E54D0D00EEED82 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 03CB2E081CD6472EB52D4C3D /* ReactNativeGeth.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 13B07F961A680F5B00A75B9A;
+			remoteInfo = ReactNativeGeth;
+		};
+		668D10F725E54D0D00EEED82 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 03CB2E081CD6472EB52D4C3D /* ReactNativeGeth.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 00E356EE1AD99517003FC87E;
+			remoteInfo = ReactNativeGethTests;
+		};
+		668D10F925E54D0D00EEED82 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 03CB2E081CD6472EB52D4C3D /* ReactNativeGeth.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2D02E47B1E0B4A5D006451C7;
+			remoteInfo = "ReactNativeGeth-tvOS";
+		};
+		668D10FB25E54D0D00EEED82 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 03CB2E081CD6472EB52D4C3D /* ReactNativeGeth.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2D02E4901E0B4A5D006451C7;
+			remoteInfo = "ReactNativeGeth-tvOSTests";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +76,7 @@
 		00E356EE1AD99517003FC87E /* DonutTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DonutTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* DonutTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DonutTests.m; sourceTree = "<group>"; };
+		03CB2E081CD6472EB52D4C3D /* ReactNativeGeth.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeGeth.xcodeproj; path = "../node_modules/react-native-geth/ios/ReactNativeGeth.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Donut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Donut.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Donut/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Donut/AppDelegate.m; sourceTree = "<group>"; };
@@ -58,11 +91,15 @@
 		3ECD546F3378FD459F4E82B0 /* Pods-Donut.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Donut.debug.xcconfig"; path = "Target Support Files/Pods-Donut/Pods-Donut.debug.xcconfig"; sourceTree = "<group>"; };
 		4D40708BE521DBE7DC6E68C8 /* Pods-Donut.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Donut.release.xcconfig"; path = "Target Support Files/Pods-Donut/Pods-Donut.release.xcconfig"; sourceTree = "<group>"; };
 		60796641CDFE67F015A69D88 /* libPods-Donut-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Donut-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6D751C711C1C45C78321D60A /* ReactNativeGeth.app */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ReactNativeGeth.app; sourceTree = "<group>"; };
 		733F2AB28EB81C13C7E74C7E /* Pods-Donut-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Donut-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Donut-tvOS/Pods-Donut-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Donut/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8D3D2E99D3814D73E5353ACB /* Pods-Donut-DonutTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Donut-DonutTests.debug.xcconfig"; path = "Target Support Files/Pods-Donut-DonutTests/Pods-Donut-DonutTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A12CCB16C7D8CECEE169FA2F /* Pods-Donut-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Donut-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-Donut-tvOSTests/Pods-Donut-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		D746447BFA0C4425963CA48D /* ReactNativeGeth-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = "ReactNativeGeth-tvOSTests.xctest"; sourceTree = "<group>"; };
 		D7E787E39BC1C66D83758CC7 /* Pods-Donut-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Donut-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-Donut-tvOSTests/Pods-Donut-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		DEE7A3BF8967436E9A4084C9 /* ReactNativeGethTests.xctest */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ReactNativeGethTests.xctest; sourceTree = "<group>"; };
+		E544F64BFEF64DCAA27E1E01 /* ReactNativeGeth-tvOS.app */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "ReactNativeGeth-tvOS.app"; sourceTree = "<group>"; };
 		EADEA568884090C1B008E181 /* libPods-Donut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Donut.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -83,6 +120,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A4B148D367B119F99EC2C2E5 /* libPods-Donut.a in Frameworks */,
+				8DDFFF44F51441E2B2EF353C /* ReactNativeGeth.app in Frameworks */,
+				4EA02E0325FA4DA8B33C5CCF /* ReactNativeGethTests.xctest in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,6 +130,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9F35C4F574E710F3E22269DC /* libPods-Donut-tvOS.a in Frameworks */,
+				CE0C319A487C426488088DE4 /* ReactNativeGeth-tvOS.app in Frameworks */,
+				26E573B0BA0C44F08C3FB3DD /* ReactNativeGeth-tvOSTests.xctest in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,6 +190,28 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		668D10E225E54D0D00EEED82 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				6D751C711C1C45C78321D60A /* ReactNativeGeth.app */,
+				DEE7A3BF8967436E9A4084C9 /* ReactNativeGethTests.xctest */,
+				E544F64BFEF64DCAA27E1E01 /* ReactNativeGeth-tvOS.app */,
+				D746447BFA0C4425963CA48D /* ReactNativeGeth-tvOSTests.xctest */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		668D10EF25E54D0D00EEED82 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				668D10F625E54D0D00EEED82 /* ReactNativeGeth.app */,
+				668D10F825E54D0D00EEED82 /* ReactNativeGethTests.xctest */,
+				668D10FA25E54D0D00EEED82 /* ReactNativeGeth-tvOS.app */,
+				668D10FC25E54D0D00EEED82 /* ReactNativeGeth-tvOSTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		71ED362ACEA45F9F60DCD285 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -167,6 +230,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				03CB2E081CD6472EB52D4C3D /* ReactNativeGeth.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -180,6 +244,8 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				71ED362ACEA45F9F60DCD285 /* Pods */,
+				668D10E225E54D0D00EEED82 /* Recovered References */,
+				A66366196C504CE79BB70F5C /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -196,6 +262,14 @@
 			);
 			name = Products;
 			sourceTree = "<group>";
+		};
+		A66366196C504CE79BB70F5C /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -318,6 +392,12 @@
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 668D10EF25E54D0D00EEED82 /* Products */;
+					ProjectRef = 03CB2E081CD6472EB52D4C3D /* ReactNativeGeth.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* Donut */,
@@ -327,6 +407,37 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		668D10F625E54D0D00EEED82 /* ReactNativeGeth.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = ReactNativeGeth.app;
+			remoteRef = 668D10F525E54D0D00EEED82 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		668D10F825E54D0D00EEED82 /* ReactNativeGethTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ReactNativeGethTests.xctest;
+			remoteRef = 668D10F725E54D0D00EEED82 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		668D10FA25E54D0D00EEED82 /* ReactNativeGeth-tvOS.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "ReactNativeGeth-tvOS.app";
+			remoteRef = 668D10F925E54D0D00EEED82 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		668D10FC25E54D0D00EEED82 /* ReactNativeGeth-tvOSTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ReactNativeGeth-tvOSTests.xctest";
+			remoteRef = 668D10FB25E54D0D00EEED82 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		00E356EC1AD99517003FC87E /* Resources */ = {
@@ -615,9 +726,20 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-geth/ios/ReactNativeGeth",
+				);
 				INFOPLIST_FILE = DonutTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -635,9 +757,20 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-geth/ios/ReactNativeGeth",
+				);
 				INFOPLIST_FILE = DonutTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -658,6 +791,10 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = FZ33ZRHKL4;
 				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-geth/ios/ReactNativeGeth",
+				);
 				INFOPLIST_FILE = Donut/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -682,6 +819,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = FZ33ZRHKL4;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-geth/ios/ReactNativeGeth",
+				);
 				INFOPLIST_FILE = Donut/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -710,8 +851,19 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-geth/ios/ReactNativeGeth",
+				);
 				INFOPLIST_FILE = "Donut-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -738,8 +890,19 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-geth/ios/ReactNativeGeth",
+				);
 				INFOPLIST_FILE = "Donut-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -765,8 +928,19 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-geth/ios/ReactNativeGeth",
+				);
 				INFOPLIST_FILE = "Donut-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -792,8 +966,19 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-geth/ios/ReactNativeGeth",
+				);
 				INFOPLIST_FILE = "Donut-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

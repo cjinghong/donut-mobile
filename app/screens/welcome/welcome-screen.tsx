@@ -1,8 +1,8 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { View, SafeAreaView } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { observer } from "mobx-react-lite"
-import { Text, Button, StyleService, useStyleSheet } from '@ui-kitten/components'
+import { Text, StyleService, useStyleSheet } from '@ui-kitten/components'
 import * as Animatable from 'react-native-animatable'
 
 import { Screen } from "../../components"
