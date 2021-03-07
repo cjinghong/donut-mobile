@@ -1,7 +1,7 @@
 import React from "react"
 import { observer } from "mobx-react-lite"
 import { View } from "react-native"
-import { Screen, Wallpaper } from "../../components"
+import { Screen } from "../../components"
 import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
@@ -15,7 +15,6 @@ export const WalletScreen = observer(function WalletScreen() {
   // const navigation = useNavigation()
   return (
     <Screen style={styles.container} preset="fixed">
-      <Wallpaper />
       <View style={styles.card}>
         <Text category="h4">
           My Wallet 1

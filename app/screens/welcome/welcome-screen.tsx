@@ -2,7 +2,7 @@ import React from "react"
 import { View, SafeAreaView } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { observer } from "mobx-react-lite"
-import { Text, Button, StyleService, useStyleSheet } from '@ui-kitten/components'
+import { Text, StyleService, useStyleSheet } from '@ui-kitten/components'
 import * as Animatable from 'react-native-animatable'
 
 import { Screen } from "../../components"
@@ -24,7 +24,7 @@ export const WelcomeScreen = observer(function WelcomeScreen() {
           Welcome to Donut.
         </Text>
         <Text category='s1' style={styles.subtitle}>
-          The world's tastiest Ethereum wallet
+          The world's tastiest Ethereum NFT wallet
         </Text>
         <Animatable.Image
           animation={{
