@@ -264,12 +264,12 @@
 			sourceTree = "<group>";
 		};
 		A66366196C504CE79BB70F5C /* Resources */ = {
-			isa = "PBXGroup";
+			isa = PBXGroup;
 			children = (
 			);
 			name = Resources;
-			sourceTree = "<group>";
 			path = "";
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 

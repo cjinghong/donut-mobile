@@ -24,7 +24,7 @@ export const WelcomeScreen = observer(function WelcomeScreen() {
           Welcome to Donut.
         </Text>
         <Text category='s1' style={styles.subtitle}>
-          The world's tastiest Ethereum wallet
+          The world's tastiest Ethereum NFT wallet
         </Text>
         <Animatable.Image
           animation={{
