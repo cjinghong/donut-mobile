@@ -4251,7 +4251,7 @@ async-eventemitter@^0.2.2:
   dependencies:
     async "^2.4.0"
 
-"async-eventemitter@github:ahultgren/async-eventemitter#fa06e39e56786ba541c180061dbf2c0a5bbf951c":
+async-eventemitter@ahultgren/async-eventemitter#fa06e39e56786ba541c180061dbf2c0a5bbf951c:
   version "0.2.3"
   resolved "https://codeload.github.com/ahultgren/async-eventemitter/tar.gz/fa06e39e56786ba541c180061dbf2c0a5bbf951c"
   dependencies:
@@ -17843,6 +17843,13 @@ web3-provider-engine@^13.6.5:
     xhr "^2.2.0"
     xtend "^4.0.1"
 
+web3-react-native@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/web3-react-native/-/web3-react-native-0.1.1.tgz#6dee70fd0a62ae6836c2efc92387189df80d5b8d"
+  integrity sha512-uonobedG9AdcARgz1jQgF9FsewjUbKfIy7I4oaaLFZCTLnDMQH+Kykr6Wsu/g9IaV1PUo5HOO8ZeiArKcGTLvA==
+  dependencies:
+    type-check "^0.4.0"
+
 web3@0.20.7, web3@^0.20.0, web3@^0.20.4:
   version "0.20.7"
   resolved "https://registry.yarnpkg.com/web3/-/web3-0.20.7.tgz#1605e6d81399ed6f85a471a4f3da0c8be57df2f7"
@@ -18221,7 +18228,6 @@ ws@^7, ws@^7.0.0, ws@^7.1.2:
 
 "wyvern-js@git+https://github.com/ProjectOpenSea/wyvern-js.git#v3.2.1":
   version "3.2.0"
-  uid fabb7660f23f2252c141077e32193d281036299e
   resolved "git+https://github.com/ProjectOpenSea/wyvern-js.git#fabb7660f23f2252c141077e32193d281036299e"
   dependencies:
     "0x.js" "^0.29.2"
