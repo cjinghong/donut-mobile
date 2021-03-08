@@ -6,8 +6,9 @@
  */
 import React from "react"
 import { createStackNavigator, StackNavigationProp } from "@react-navigation/stack"
-import { WelcomeScreen, DemoScreen } from "../screens"
-import TabNavigator from "./tab-navigator"
+import { WelcomeScreen } from "../screens"
+import { HomeNavigator } from "./home-navigator"
+import { AddWalletScreen } from "../screens/add-wallet/add-wallet-screen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -24,6 +25,7 @@ import TabNavigator from "./tab-navigator"
 export type PrimaryParamList = {
   welcome: undefined
   home: undefined
+  addWallet: undefined
 }
 export type MainNavigatorType = StackNavigationProp<PrimaryParamList>;
 
@@ -33,12 +35,18 @@ const Stack = createStackNavigator<PrimaryParamList>()
 export function MainNavigator() {
   return (
     <Stack.Navigator
+      mode="modal"
       screenOptions={{
         headerShown: false,
       }}
     >
+      <Stack.Screen name="home" component={HomeNavigator} />
       <Stack.Screen name="welcome" component={WelcomeScreen} />
-      <Stack.Screen name="home" component={TabNavigator} />
+      <Stack.Screen
+        name="addWallet"
+        component={AddWalletScreen}
+        options={{ gestureEnabled: false }}
+      />
     </Stack.Navigator>
   )
 }

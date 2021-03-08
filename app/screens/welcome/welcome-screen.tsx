@@ -8,14 +8,23 @@ import * as Animatable from 'react-native-animatable'
 import { Screen } from "../../components"
 import { color, spacing } from "../../theme"
 import { HapticButton } from "../../components/haptic-button/haptic-button"
+import { useStores } from "../../models"
 
 const donutImage = require("./donut.jpg")
 
 export const WelcomeScreen = observer(function WelcomeScreen() {
   const navigation = useNavigation()
   const styles = useStyleSheet(styleService)
+  const { setOnboarded } = useStores()
 
-  const goHome = () => navigation.navigate("home")
+  // Set onboarded
+  useEffect(() => {
+    setOnboarded()
+  }, [])
+
+  const goHome = () => {
+    navigation.goBack()
+  }
 
   return (
     <View testID="WelcomeScreen" style={styles.container}>

@@ -1,16 +1,22 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { observer } from "mobx-react-lite"
 import { View } from "react-native"
 import { Screen } from "../../components"
 import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
 import Web3 from 'web3'
 import { OpenSeaPort, Network } from 'opensea-js'
+import { WalletsContainer } from "../../components/wallet/wallets-container"
+import { useStores } from "../../models"
+import { useNavigation } from "@react-navigation/core"
 
-export const WalletScreen = observer(function WalletScreen() {
+export const WalletScreen = observer(() => {
   const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io')
   const seaport = new OpenSeaPort(provider, {
     networkName: Network.Main
   })
+
+  const navigation = useNavigation()
+  const { wallets, currentWallet } = useStores()
 
   useEffect(() => {
     // Init openseaport
@@ -20,26 +26,27 @@ export const WalletScreen = observer(function WalletScreen() {
       offset: 0
     })
       .then((res) => {
-        // console.log('assets', res.assets.map((asset) => asset.name))
-        // console.log('assets count', res.estimatedCount)
+        console.log('assets', res.assets)
       }).catch((error) => {
         console.log('error', error)
       })
   }, [])
 
+  useEffect(() => {
+    if (!wallets.length) {
+      navigation.navigate("addWallet")
+    }
+  }, [wallets])
+
   const styles = useStyleSheet(styleService)
+
+  if (!wallets.length) {
+    return null
+  }
 
   return (
     <Screen style={styles.container} preset="fixed">
-      <View style={styles.card}>
-        <Text category="h4">
-          My Wallet 1
-        </Text>
-        <View style={styles.copyReceiveContainer}>
-          <Text>Copy Address</Text>
-          <Text>Receive</Text>
-        </View>
-      </View>
+      <WalletsContainer wallets={wallets} currentWallet={wallets[0]}/>
       <View>
         <Text>My Crypto</Text>
       </View>
