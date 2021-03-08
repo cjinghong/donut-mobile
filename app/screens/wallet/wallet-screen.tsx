@@ -3,36 +3,31 @@ import { observer } from "mobx-react-lite"
 import { View } from "react-native"
 import { Screen } from "../../components"
 import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
-import { Web3 } from "web3-react-native"
+import Web3 from 'web3'
 import { OpenSeaPort, Network } from 'opensea-js'
-// import { useNavigation } from "@react-navigation/native"
-// import { useStores } from "../../models"
 
 export const WalletScreen = observer(function WalletScreen() {
-  const styles = useStyleSheet(styleService)
-  const [web3, setWeb3] = useState(null)
-  const [seaport, setSeaport] = useState(null)
-  console.log(Web3)
-  // const web3 = new Web3(
-  //   new Web3.providers.HttpProvider('https://mainnet.infura.io/')
-  // )
-  // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
+  const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io')
+  const seaport = new OpenSeaPort(provider, {
+    networkName: Network.Main
+  })
 
-  // Pull in navigation via hook
-  // const navigation = useNavigation()
   useEffect(() => {
-    const initWeb3 = async () => {
-      const provider = await Web3('https://mainnet.infura.io/')
-      setWeb3(provider)
-
-      const seaport = new OpenSeaPort(provider, {
-        networkName: Network.Main
+    // Init openseaport
+    seaport.api.getAssets({
+      owner: '0x15f7320adb990020956d29edb6ba17f3d468001e',
+      limit: 10,
+      offset: 0
+    })
+      .then((res) => {
+        // console.log('assets', res.assets.map((asset) => asset.name))
+        // console.log('assets count', res.estimatedCount)
+      }).catch((error) => {
+        console.log('error', error)
       })
-      console.log(seaport)
-    }
-    initWeb3()
   }, [])
+
+  const styles = useStyleSheet(styleService)
 
   return (
     <Screen style={styles.container} preset="fixed">

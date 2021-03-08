@@ -316,10 +316,6 @@ PODS:
     - UMFontInterface
   - UMSensorsInterface (5.4.0)
   - UMTaskManagerInterface (5.4.0)
-  - web3-react-native (0.1.1):
-    - React
-    - secp256k1.c (= 0.1.2)
-    - web3swift (= 2.2.1)
   - web3swift (2.2.1):
     - BigInt (~> 4.0)
     - CryptoSwift (~> 1.0.0)
@@ -388,7 +384,6 @@ DEPENDENCIES:
   - "UMReactNativeAdapter (from `../node_modules/@unimodules/react-native-adapter/ios`)"
   - UMSensorsInterface (from `../node_modules/unimodules-sensors-interface/ios`)
   - UMTaskManagerInterface (from `../node_modules/unimodules-task-manager-interface/ios`)
-  - web3-react-native (from `../node_modules/web3-react-native`)
   - web3swift (= 2.2.1)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -515,8 +510,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/unimodules-sensors-interface/ios"
   UMTaskManagerInterface:
     :path: "../node_modules/unimodules-task-manager-interface/ios"
-  web3-react-native:
-    :path: "../node_modules/web3-react-native"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -583,7 +576,6 @@ SPEC CHECKSUMS:
   UMReactNativeAdapter: 172def7895b2cb44a7dd021336e316d5fa8ea958
   UMSensorsInterface: 4df9ec662134de5614ae61acc249d6912db87ca5
   UMTaskManagerInterface: 4c60b43eaf3cb05a164bc9113258a171c18b7bf7
-  web3-react-native: 572552b4e19b23440c2f77439002c3a64e3363ad
   web3swift: d79140b9d5fdd06a377072936b086bb7ae187157
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
 
