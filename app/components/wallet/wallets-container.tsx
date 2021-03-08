@@ -3,28 +3,27 @@ import { observer } from "mobx-react-lite"
 import { View } from "react-native"
 import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
 import { Wallet } from "../../models/entities/wallet"
+import { HapticTouchable } from "../haptic-touchable/haptic-touchable"
 
 interface WalletsContainerProps {
-  wallets: Wallet[];
   currentWallet: Wallet;
 }
 
-export const WalletsContainer: React.FC<WalletsContainerProps> = observer(function WalletScreen({
-  wallets,
-  currentWallet
-}) {
+export const WalletsContainer: React.FC<WalletsContainerProps> = observer(({ currentWallet }) => {
   const styles = useStyleSheet(styleService)
 
   // Render wallets
   return (
-    <View style={styles.card}>
-      <Text category="h4">
-        My Wallet 1
+    <HapticTouchable>
+      <View style={styles.card}>
+        <Text category="h4">
+          {currentWallet.name}
         </Text>
-      <View style={styles.copyReceiveContainer}>
-        <Text>0x15f7320adb9900209...</Text>
+        <Text numberOfLines={1} style={styles.publicKey}>
+          {currentWallet.publicKey}
+        </Text>
       </View>
-    </View>
+    </HapticTouchable>
   )
 })
 
@@ -34,7 +33,7 @@ const styleService = StyleService.create({
     backgroundColor: 'white',
     borderRadius: 10,
     elevation: 10,
-    padding: 16,
+    padding: 24,
     shadowColor: "color-gray",
     shadowOffset: {
       width: 2,
@@ -43,8 +42,8 @@ const styleService = StyleService.create({
     shadowOpacity: 0.2,
     shadowRadius: 15
   },
-  copyReceiveContainer: {
-    flexDirection: 'row'
+  publicKey: {
+    paddingHorizontal: 24
   },
   container: {
     flex: 1,

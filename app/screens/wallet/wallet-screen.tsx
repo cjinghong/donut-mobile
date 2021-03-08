@@ -46,7 +46,7 @@ export const WalletScreen = observer(() => {
 
   return (
     <Screen style={styles.container} preset="fixed">
-      <WalletsContainer wallets={wallets} currentWallet={wallets[0]}/>
+      <WalletsContainer currentWallet={currentWallet || wallets[0]}/>
       <View>
         <Text>My Crypto</Text>
       </View>

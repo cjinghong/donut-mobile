@@ -1,6 +1,6 @@
-import { Instance, SnapshotOut, types } from "mobx-state-tree"
+import { cast, Instance, SnapshotOut, types } from "mobx-state-tree"
 import { NFTModel } from "../entities/nft"
-import { WalletModel } from "../entities/wallet"
+import { Wallet, WalletModel } from "../entities/wallet"
 
 /**
  * A RootStore model.
@@ -17,6 +17,16 @@ export const RootStoreModel = types
   .actions((self) => ({
     setOnboarded: () => {
       self.onboarded = true
+    },
+    addWallet: (wallet: Wallet) => {
+      if (self.wallets.includes(wallet)) {
+        throw Error('This wallet already exist!')
+      } else if (!wallet.publicKey) {
+        throw Error('Public key cannot be empty.')
+      } else {
+        self.wallets = cast([...self.wallets, wallet])
+        self.currentWallet = wallet
+      }
     },
   }))
 
