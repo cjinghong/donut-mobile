@@ -3,13 +3,15 @@ import { observer } from "mobx-react-lite"
 import { View } from "react-native"
 import { Screen } from "../../components"
 import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
+import { Web3 } from "web3-react-native"
+import { OpenSeaPort, Network } from 'opensea-js'
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
-import { Web3 } from "web3-react-native"
 
 export const WalletScreen = observer(function WalletScreen() {
   const styles = useStyleSheet(styleService)
   const [web3, setWeb3] = useState(null)
+  const [seaport, setSeaport] = useState(null)
   console.log(Web3)
   // const web3 = new Web3(
   //   new Web3.providers.HttpProvider('https://mainnet.infura.io/')
@@ -21,8 +23,13 @@ export const WalletScreen = observer(function WalletScreen() {
   // const navigation = useNavigation()
   useEffect(() => {
     const initWeb3 = async () => {
-      const instance = await Web3('https://mainnet.infura.io/')
-      setWeb3(instance)
+      const provider = await Web3('https://mainnet.infura.io/')
+      setWeb3(provider)
+
+      // const seaport = new OpenSeaPort(provider, {
+      //   networkName: Network.Main
+      // })
+      // console.log(seaport)
     }
     initWeb3()
   }, [])
