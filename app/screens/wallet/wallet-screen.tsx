@@ -16,7 +16,7 @@ export const WalletScreen = observer(() => {
   })
 
   const navigation = useNavigation()
-  const { wallets, currentWallet } = useStores()
+  const { wallets, currentWalletIndex, setCurrentWalletIndex } = useStores()
 
   useEffect(() => {
     // Init openseaport
@@ -46,7 +46,11 @@ export const WalletScreen = observer(() => {
 
   return (
     <Screen style={styles.container} preset="fixed">
-      <WalletsContainer currentWallet={currentWallet || wallets[0]}/>
+      <WalletsContainer
+      wallets={wallets}
+      currentWalletIndex={currentWalletIndex}
+      onSelectWalletIndex={setCurrentWalletIndex}
+      />
       <View>
         <Text>My Crypto</Text>
       </View>

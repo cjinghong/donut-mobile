@@ -11,7 +11,7 @@ export const RootStoreModel = types
   .props({
     onboarded: types.optional(types.boolean, false),
     wallets: types.optional(types.array(WalletModel), []),
-    currentWallet: types.maybe(WalletModel),
+    currentWalletIndex: types.optional(types.number, 0),
     nfts: types.optional(types.array(NFTModel), [])
   })
   .actions((self) => ({
@@ -25,9 +25,12 @@ export const RootStoreModel = types
         throw Error('Public key cannot be empty.')
       } else {
         self.wallets = cast([...self.wallets, wallet])
-        self.currentWallet = wallet
+        self.currentWalletIndex = 0
       }
     },
+    setCurrentWalletIndex: (index: number) => {
+      self.currentWalletIndex = index
+    }
   }))
 
 /**
