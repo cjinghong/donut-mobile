@@ -1,44 +1,36 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { View } from "react-native"
+import { Screen } from "../../components"
 import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
 import Web3 from 'web3'
-import { getAddressBalances } from 'eth-balance-checker/lib/web3'
-
-import { Screen, Wallpaper } from "../../components"
-import { Api } from "../../services/api"
-
-// import { useNavigation } from "@react-navigation/native"
-// import { useStores } from "../../models"
+import { OpenSeaPort, Network } from 'opensea-js'
 
 export const WalletScreen = observer(function WalletScreen() {
-  const styles = useStyleSheet(styleService)
-  // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
-
-  // Pull in navigation via hook
-  // const navigation = useNavigation()
-
-  //   const api = new Api()
-  //   api.setup()
-
-  const web3 = new Web3(
-    new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws/v3/26afd41534b749d7bce517cb73fe0d9a")
-  )
-  const address = '0xCCc985a0EFC439D74af214EA26762c441A86d5A8'
-  const tokens = ['0x3845badAde8e6dFF049820680d1F14bD3903a5d0']
+  const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io')
+  const seaport = new OpenSeaPort(provider, {
+    networkName: Network.Main
+  })
 
   useEffect(() => {
-    getAddressBalances(web3, address, tokens).then(balances => {
-      console.log(balances)
-    }).catch((error) => {
-      console.log(error)
+    // Init openseaport
+    seaport.api.getAssets({
+      owner: '0x15f7320adb990020956d29edb6ba17f3d468001e',
+      limit: 10,
+      offset: 0
     })
+      .then((res) => {
+        // console.log('assets', res.assets.map((asset) => asset.name))
+        // console.log('assets count', res.estimatedCount)
+      }).catch((error) => {
+        console.log('error', error)
+      })
   }, [])
 
+  const styles = useStyleSheet(styleService)
+
   return (
-    <Screen style={styles.container} preset="scroll">
-      <Wallpaper />
+    <Screen style={styles.container} preset="fixed">
       <View style={styles.card}>
         <Text category="h4">
           My Wallet 1
