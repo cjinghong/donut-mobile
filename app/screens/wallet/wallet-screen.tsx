@@ -26,10 +26,10 @@ export const WalletScreen = observer(function WalletScreen() {
       const provider = await Web3('https://mainnet.infura.io/')
       setWeb3(provider)
 
-      // const seaport = new OpenSeaPort(provider, {
-      //   networkName: Network.Main
-      // })
-      // console.log(seaport)
+      const seaport = new OpenSeaPort(provider, {
+        networkName: Network.Main
+      })
+      console.log(seaport)
     }
     initWeb3()
   }, [])

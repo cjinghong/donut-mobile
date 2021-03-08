@@ -1,3 +1,7 @@
+// Crypto.js
+import './shim.js'
+import crypto from 'crypto'
+
 // This is the first file that ReactNative will run when it starts up.
 //
 // We jump out of here immediately and into our main entry point instead.
