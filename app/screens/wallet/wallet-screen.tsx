@@ -54,7 +54,6 @@ export const WalletScreen = observer(() => {
         wallets={wallets}
         currentWalletIndex={currentWalletIndex}
         onSelectWalletIndex={setCurrentWalletIndex}
-        onAddWallet={onAddWallet}
       />
       <View>
         <Text>{(wallets[currentWalletIndex] || {}).publicKey}</Text>
