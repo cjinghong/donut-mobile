@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef } from "react"
 import { observer } from "mobx-react-lite"
-import { Animated, Dimensions, NativeScrollEvent, NativeSyntheticEvent, View } from "react-native"
+import { Animated, NativeScrollEvent, NativeSyntheticEvent, View } from "react-native"
 import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
-import * as Haptics from 'expo-haptics'
 
 import { Wallet } from "../../models/entities/wallet"
 import { HapticTouchable } from "../haptic-touchable/haptic-touchable"
@@ -12,6 +11,7 @@ interface WalletsContainerProps {
   wallets: Wallet[];
   currentWalletIndex: number;
   onSelectWalletIndex: (index: number) => void;
+  onWalletIndexPress: (index: number) => void;
 }
 
 const CONTENT_HEIGHT = 120
@@ -20,10 +20,15 @@ export const WalletsContainer: React.FC<WalletsContainerProps> = observer(({
   currentWalletIndex,
   wallets,
   onSelectWalletIndex,
+  onWalletIndexPress
 }) => {
   const styles = useStyleSheet(styleService)
   const scrollY = useRef(new Animated.Value(0)).current
   const flatList = useRef(null)
+
+  useEffect(() => {
+    flatList.current?.scrollToIndex({ index: currentWalletIndex, animated: true })
+  }, [currentWalletIndex])
 
   const renderItem = ({ item, index }) => {
     const inputRange = [
@@ -42,7 +47,7 @@ export const WalletsContainer: React.FC<WalletsContainerProps> = observer(({
       extrapolate: "clamp"
     })
     return (
-      <HapticTouchable>
+      <HapticTouchable onPress={() => onWalletIndexPress(index)}>
         <Animated.View
           style={[
             styles.walletContainer,
@@ -70,7 +75,10 @@ export const WalletsContainer: React.FC<WalletsContainerProps> = observer(({
     const { contentOffset, layoutMeasurement } = event.nativeEvent
     // Divide the horizontal offset by the width of the view to see which page is visible
     const newWalletIndex = Math.floor(contentOffset.y / layoutMeasurement.height)
-    onSelectWalletIndex(newWalletIndex)
+
+    if (newWalletIndex >= 0) {
+      onSelectWalletIndex(newWalletIndex)
+    }
   }
 
   // Render wallets
@@ -78,14 +86,12 @@ export const WalletsContainer: React.FC<WalletsContainerProps> = observer(({
     <View style={styles.card}>
       <Animated.FlatList
         pagingEnabled
-        // TODO: - Auto scroll to index on adding new wallet
         snapToInterval={CONTENT_HEIGHT}
         decelerationRate="fast"
         initialScrollIndex={currentWalletIndex}
         onScrollToIndexFailed={info => {
-          const wait = new Promise(resolve => setTimeout(resolve, 500))
-          wait.then(() => {
-            flatList.current?.scrollToIndex({ index: info.index })
+          delay(500).then(() => {
+            flatList.current?.scrollToIndex({ index: info.index, animated: true })
           })
         }}
         ref={flatList}

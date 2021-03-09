@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 import { observer } from "mobx-react-lite"
-import { View } from "react-native"
+import { ActionSheetIOS, View } from "react-native"
 import { Screen } from "../../components"
 import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
 import Web3 from 'web3'
@@ -8,6 +8,7 @@ import { OpenSeaPort, Network } from 'opensea-js'
 import { WalletsContainer } from "../../components/wallet/wallets-container"
 import { useStores } from "../../models"
 import { useNavigation } from "@react-navigation/core"
+import { truncateStringMiddle } from "../../utils/strings"
 
 export const WalletScreen = observer(() => {
   const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io')
@@ -42,11 +43,32 @@ export const WalletScreen = observer(() => {
     navigation.navigate("addWallet")
   }
 
+  const onEditWalletPress = (index: number) => {
+    const options = [
+      ...wallets.map(w => `${w.name}: ${truncateStringMiddle(w.publicKey, 4, 4)}`),
+      'Add New Wallet',
+      'Cancel'
+    ]
+    ActionSheetIOS.showActionSheetWithOptions({
+      title: 'Select Wallet',
+      options,
+      cancelButtonIndex: options.length - 1
+    }, (selectedOptionIndex) => {
+      const cancelIndex = options.length - 1
+      const addWalletIndex = options.length - 2
+      if (selectedOptionIndex === cancelIndex) {
+        // Do nothing
+      } else if (selectedOptionIndex === addWalletIndex) {
+        onAddWallet()
+      } else {
+        setCurrentWalletIndex(selectedOptionIndex)
+      }
+    })
+  }
+
   if (!wallets.length) {
     return null
   }
-
-  // console.log(currentWalletIndex)
 
   return (
     <Screen style={styles.container} preset="fixed">
@@ -54,6 +76,7 @@ export const WalletScreen = observer(() => {
         wallets={wallets}
         currentWalletIndex={currentWalletIndex}
         onSelectWalletIndex={setCurrentWalletIndex}
+        onWalletIndexPress={onEditWalletPress}
       />
       <View>
         <Text>{(wallets[currentWalletIndex] || {}).publicKey}</Text>
