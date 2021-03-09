@@ -25,7 +25,7 @@ export const RootStoreModel = types
         throw Error('Public key cannot be empty.')
       } else {
         self.wallets = cast([...self.wallets, wallet])
-        self.currentWalletIndex = 0
+        self.currentWalletIndex = self.wallets.length - 1
       }
     },
     setCurrentWalletIndex: (index: number) => {

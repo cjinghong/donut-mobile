@@ -20,39 +20,44 @@ export const WalletScreen = observer(() => {
 
   useEffect(() => {
     // Init openseaport
-    seaport.api.getAssets({
-      owner: '0x15f7320adb990020956d29edb6ba17f3d468001e',
-      limit: 10,
-      offset: 0
-    })
-      .then((res) => {
-        console.log('assets', res.assets)
-      }).catch((error) => {
-        console.log('error', error)
-      })
+    // seaport.api.getAssets({
+    //   owner: '0x15f7320adb990020956d29edb6ba17f3d468001e',
+    //   limit: 10,
+    //   offset: 0
+    // })
+    //   .then((res) => {
+    //     console.log('assets', res.assets)
+    //   }).catch((error) => {
+    //     console.log('error', error)
+    //   })
   }, [])
 
   useEffect(() => {
-    if (!wallets.length) {
-      navigation.navigate("addWallet")
-    }
+    !wallets.length && onAddWallet()
   }, [wallets])
 
   const styles = useStyleSheet(styleService)
+
+  const onAddWallet = () => {
+    navigation.navigate("addWallet")
+  }
 
   if (!wallets.length) {
     return null
   }
 
+  // console.log(currentWalletIndex)
+
   return (
     <Screen style={styles.container} preset="fixed">
       <WalletsContainer
-      wallets={wallets}
-      currentWalletIndex={currentWalletIndex}
-      onSelectWalletIndex={setCurrentWalletIndex}
+        wallets={wallets}
+        currentWalletIndex={currentWalletIndex}
+        onSelectWalletIndex={setCurrentWalletIndex}
+        onAddWallet={onAddWallet}
       />
       <View>
-        <Text>My Crypto</Text>
+        <Text>{(wallets[currentWalletIndex] || {}).publicKey}</Text>
       </View>
     </Screen>
   )

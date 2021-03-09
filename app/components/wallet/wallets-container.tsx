@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { Animated, Dimensions, NativeScrollEvent, NativeSyntheticEvent, View } from "react-native"
 import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
@@ -6,11 +6,13 @@ import * as Haptics from 'expo-haptics'
 
 import { Wallet } from "../../models/entities/wallet"
 import { HapticTouchable } from "../haptic-touchable/haptic-touchable"
+import { delay } from "../../utils/delay"
 
 interface WalletsContainerProps {
   wallets: Wallet[];
   currentWalletIndex: number;
   onSelectWalletIndex: (index: number) => void;
+  onAddWallet: () => void;
 }
 
 const CONTENT_HEIGHT = 120
@@ -18,17 +20,15 @@ const CONTENT_HEIGHT = 120
 export const WalletsContainer: React.FC<WalletsContainerProps> = observer(({
   currentWalletIndex,
   wallets,
-  onSelectWalletIndex
+  onSelectWalletIndex,
+  onAddWallet
 }) => {
   const styles = useStyleSheet(styleService)
   const { height } = Dimensions.get("screen")
   const scrollY = useRef(new Animated.Value(0)).current
   const flatList = useRef(null)
 
-  useEffect(() => {
-    // Scroll to current wallet
-    flatList.current.scrollToIndex({ index: currentWalletIndex })
-  }, [])
+  const [canDoHaptics, setCanDoHaptics] = useState(true)
 
   const renderAddWalletView = () => {
     const negativeScrollY = Animated.multiply(scrollY, -1)
@@ -40,11 +40,13 @@ export const WalletsContainer: React.FC<WalletsContainerProps> = observer(({
     })
     const translateY = negativeScrollY.interpolate({
       inputRange: [0, CONTENT_HEIGHT * 0.6, height],
-      outputRange: [-100, 0, 0]
+      outputRange: [-100, 0, 0],
+      extrapolate: "clamp"
     })
     const scale = negativeScrollY.interpolate({
       inputRange: [0, CONTENT_HEIGHT * 0.5, CONTENT_HEIGHT * 0.55, height],
-      outputRange: [0.8, 0.8, 1, 1]
+      outputRange: [0.8, 0.8, 1, 1],
+      extrapolate: "clamp"
     })
 
     return (
@@ -52,7 +54,7 @@ export const WalletsContainer: React.FC<WalletsContainerProps> = observer(({
         styles.addWalletView,
         {
           opacity,
-          transform: [{ translateY, scale }]
+          transform: [{ translateY }, { scale }]
         }
       ]}>
         <Text category="h3">Add New Wallet</Text>
@@ -100,25 +102,30 @@ export const WalletsContainer: React.FC<WalletsContainerProps> = observer(({
     )
   }
 
+  // Select wallet when scrolling ends
   const onScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset, layoutMeasurement } = event.nativeEvent
-
     // Divide the horizontal offset by the width of the view to see which page is visible
     const newWalletIndex = Math.floor(contentOffset.y / layoutMeasurement.height)
     onSelectWalletIndex(newWalletIndex)
   }
+
+  // If on release scroll is -CONTENT_HEIGHT/2, add new wallet
   const onScrollEndDrag = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset: { y } } = event.nativeEvent
-    if (y < -50) {
-      // Show add wallet screen
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+    if (y < -CONTENT_HEIGHT / 2) {
+      onAddWallet()
     }
   }
+
+  // If scroll past negative, give haptic feedback to indicate add wallet
   const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset: { y } } = event.nativeEvent
-    if (y < -50 && y > -55) {
-      // Show add wallet screen
+    if (y < -CONTENT_HEIGHT / 2 && canDoHaptics) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+      setCanDoHaptics(false)
+    } else if (y === 0) {
+      setCanDoHaptics(true)
     }
   }
 
@@ -128,6 +135,16 @@ export const WalletsContainer: React.FC<WalletsContainerProps> = observer(({
       {renderAddWalletView()}
       <Animated.FlatList
         pagingEnabled
+        // TODO: - Auto scroll to index on adding new wallet
+        snapToInterval={CONTENT_HEIGHT}
+        decelerationRate="fast"
+        initialScrollIndex={currentWalletIndex}
+        onScrollToIndexFailed={info => {
+          const wait = new Promise(resolve => setTimeout(resolve, 500))
+          wait.then(() => {
+            flatList.current?.scrollToIndex({ index: info.index })
+          })
+        }}
         ref={flatList}
         data={wallets}
         renderItem={renderItem}
