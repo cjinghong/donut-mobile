@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react"
 import { observer } from "mobx-react-lite"
-import { Animated, NativeScrollEvent, NativeSyntheticEvent, View } from "react-native"
+import { Animated, NativeScrollEvent, NativeSyntheticEvent, View, ViewStyle } from "react-native"
 import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
 
 import { Wallet } from "../../models/entities/wallet"
@@ -8,15 +8,17 @@ import { HapticTouchable } from "../haptic-touchable/haptic-touchable"
 import { delay } from "../../utils/delay"
 
 interface WalletsContainerProps {
+  style?: ViewStyle,
   wallets: Wallet[];
   currentWalletIndex: number;
   onSelectWalletIndex: (index: number) => void;
   onWalletIndexPress: (index: number) => void;
 }
 
-const CONTENT_HEIGHT = 120
+const CONTENT_HEIGHT = 100
 
 export const WalletsContainer: React.FC<WalletsContainerProps> = observer(({
+  style,
   currentWalletIndex,
   wallets,
   onSelectWalletIndex,
@@ -83,9 +85,13 @@ export const WalletsContainer: React.FC<WalletsContainerProps> = observer(({
 
   // Render wallets
   return (
-    <View style={styles.card}>
+    <View style={[
+      styles.card,
+      ...(style ? [style] : [])
+    ]}>
       <Animated.FlatList
         pagingEnabled
+        style={styles.flatList}
         snapToInterval={CONTENT_HEIGHT}
         decelerationRate="fast"
         initialScrollIndex={currentWalletIndex}
@@ -123,6 +129,9 @@ const styleService = StyleService.create({
     shadowOpacity: 0.2,
     shadowRadius: 15,
     height: CONTENT_HEIGHT
+  },
+  flatList: {
+    width: '100%'
   },
   walletContainer: {
     alignItems: 'center',

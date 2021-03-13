@@ -1,6 +1,6 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { ActionSheetIOS, View } from "react-native"
+import { ActionSheetIOS, Image, View } from "react-native"
 import { Screen } from "../../components"
 import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
 import Web3 from 'web3'
@@ -9,6 +9,9 @@ import { WalletsContainer } from "../../components/wallet/wallets-container"
 import { useStores } from "../../models"
 import { useNavigation } from "@react-navigation/core"
 import { truncateStringMiddle } from "../../utils/strings"
+import { NFT } from "../../models/entities/nft"
+import BottomModal from "../../components/bottom-modal/bottom-modal"
+import { AddWalletModal } from "../../components/add-wallet-modal/add-wallet-modal"
 
 export const WalletScreen = observer(() => {
   const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io')
@@ -17,20 +20,29 @@ export const WalletScreen = observer(() => {
   })
 
   const navigation = useNavigation()
-  const { wallets, currentWalletIndex, setCurrentWalletIndex } = useStores()
+  const {
+    wallets,
+    currentWalletIndex,
+    nfts,
+    setCurrentWalletIndex,
+    setNfts
+  } = useStores()
 
   useEffect(() => {
     // Init openseaport
-    // seaport.api.getAssets({
-    //   owner: '0x15f7320adb990020956d29edb6ba17f3d468001e',
-    //   limit: 10,
-    //   offset: 0
-    // })
-    //   .then((res) => {
-    //     console.log('assets', res.assets)
-    //   }).catch((error) => {
-    //     console.log('error', error)
-    //   })
+    seaport.api.getAssets({
+      // owner: '0x15f7320adb990020956d29edb6ba17f3d468001e',
+      limit: 10,
+      offset: 0,
+      asset_contract_address: '0x61097cc82c503ff2d95ce11edd93e0f0cab30c59',
+      token_ids: [2]
+    })
+      .then(({ assets }) => {
+        console.log(assets)
+        setNfts(assets as NFT[])
+      }).catch((error) => {
+        console.log('error', error)
+      })
   }, [])
 
   useEffect(() => {
@@ -38,9 +50,10 @@ export const WalletScreen = observer(() => {
   }, [wallets])
 
   const styles = useStyleSheet(styleService)
+  const [showAddWalletModal, setShowAddWalletModal] = useState(false)
 
   const onAddWallet = () => {
-    navigation.navigate("addWallet")
+    setShowAddWalletModal(true)
   }
 
   const onEditWalletPress = (index: number) => {
@@ -72,7 +85,13 @@ export const WalletScreen = observer(() => {
 
   return (
     <Screen style={styles.container} preset="fixed">
+      <AddWalletModal
+        showSampleWallet={!wallets.length}
+        visible={showAddWalletModal}
+        onDismiss={() => setShowAddWalletModal(false)}
+      />
       <WalletsContainer
+        style={styles.walletContainer}
         wallets={wallets}
         currentWalletIndex={currentWalletIndex}
         onSelectWalletIndex={setCurrentWalletIndex}
@@ -81,6 +100,19 @@ export const WalletScreen = observer(() => {
       <View>
         <Text>{(wallets[currentWalletIndex] || {}).publicKey}</Text>
       </View>
+      {
+        nfts[0] && (
+          <Image
+            style={{
+              width: 300,
+              height: 300,
+              resizeMode: 'contain',
+              backgroundColor: nfts[0].backgroundColor
+            }}
+            source={{ uri: nfts[0].imageUrlOriginal }}
+          />
+        )
+      }
     </Screen>
   )
 })
@@ -105,6 +137,9 @@ const styleService = StyleService.create({
   },
   container: {
     flex: 1,
-    padding: 16
+    padding: 16,
+  },
+  walletContainer: {
+    marginTop: 16
   }
 })

@@ -1,38 +1,68 @@
 import { Instance, types } from "mobx-state-tree"
 
-export const NFTModel = types.model({
-  // assetContract: types.model({
-  //   name: types.string,
-  //   address: types.string,
-  //   description: types.string,
-  //   imageUrl: types.string,
-  //   externalLink: types.string,
-  //   buyerFeeBasisPoints: types.number,
-  //   devBuyerFeeBasisPoints: types.number,
-  //   devSellerFeeBasisPoints: types.number,
-  //   openseaBuyerFeeBasisPoints: types.number,
-  //   openseaSellerFeeBasisPoints: types.number,
-  //   schemaName: types.string,
-  //   sellerFeeBasisPoints: types.number,
-  //   tokenSymbol: types.string,
-  //   type: types.string,
-  //   wikiLink: types.maybe(types.string)
-  // }),
-  // TODO: - Shape of buy orders
-  // buyOrders: types.maybe(types.model())
+// export const OpenSeaAccount = types.model({
+//   address: types.string,
+//   config: types.string,
+//   profileImgUrl: types.string,
+//   user: types.maybeNull(types.model({
+//     username: types.string
+//   }))
+// })
 
-  externalLink: types.maybe(types.string),
+export const NFTModel = types.model({
+  externalLink: types.maybeNull(types.string),
   imagePreviewUrl: types.string,
-  imageUrl: types.string,
+  imageUrl: types.maybeNull(types.string),
   imageUrlOriginal: types.string,
   imageUrlThumbnail: types.string,
-  lastSale: types.maybe(types.string),
+  // lastSale: types.maybeNull(types.model({
+  //   eventType: types.enumeration([
+  //     "created",
+  //     "successful",
+  //     "cancelled",
+  //     "offer_entered",
+  //     "bid_entered",
+  //     "bid_withdraw",
+  //     "transfer",
+  //     "approve",
+  //     "composition_created",
+  //     "custom",
+  //     "payout"
+  //   ]),
+  //   eventTimestamp: types.Date,
+  //   auctionType: types.enumeration([
+  //     "dutch",
+  //     "english",
+  //     "min_price",
+  //   ]),
+  //   totalPrice: types.string,
+  //   transaction: types.maybeNull(types.model({
+  //     fromAccount: OpenSeaAccount,
+  //     toAccount: OpenSeaAccount,
+  //     createdDate: types.Date,
+  //     modifiedDate: types.Date,
+  //     transactionHash: types.string,
+  //     transactionIndex: types.string,
+  //     blockNumber: types.string,
+  //     blockHash: types.string,
+  //     timestamp: types.Date
+  //   })),
+  //   paymentToken: types.maybeNull(types.model({
+  //     name: types.string,
+  //     symbol: types.string,
+  //     decimals: types.number,
+  //     address: types.string,
+  //     imageUrl: types.maybe(types.string),
+  //     ethPrice: types.maybe(types.string),
+  //     usdPrice: types.maybe(types.string),
+  //   }))
+  // })),
   name: types.string,
   description: types.string,
-  backgroundColor: types.maybe(types.string),
+  backgroundColor: types.maybeNull(types.string),
   openseaLink: types.string,
   tokenAddress: types.string,
   tokenId: types.string,
 })
 
-export interface NFT extends Instance<typeof NFTModel> {}
+export interface NFT extends Instance<typeof NFTModel> { }

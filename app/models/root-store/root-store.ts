@@ -1,5 +1,5 @@
 import { cast, Instance, SnapshotOut, types } from "mobx-state-tree"
-import { NFTModel } from "../entities/nft"
+import { NFT, NFTModel } from "../entities/nft"
 import { Wallet, WalletModel } from "../entities/wallet"
 
 /**
@@ -30,7 +30,10 @@ export const RootStoreModel = types
     },
     setCurrentWalletIndex: (index: number) => {
       self.currentWalletIndex = index
-    }
+    },
+    setNfts: (nfts: NFT[]) => {
+      self.nfts = cast(nfts)
+    },
   }))
 
 /**
