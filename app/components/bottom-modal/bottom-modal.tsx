@@ -1,17 +1,17 @@
 import { StyleService, useStyleSheet } from '@ui-kitten/components'
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import Modal from 'react-native-modal'
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { color } from '../../theme'
-import { Text } from '../text/text'
 
 export interface BottomModalProps {
-  visible: boolean;
-  onDismiss: () => void;
+  visible: boolean
+  onDismiss: () => void
   /// If provided, modal cannot be dismissed
-  disableDismiss?: boolean;
+  disableDismiss?: boolean
+  avoidKeyboard?: boolean
 }
 
 const BottomModal: React.FC<BottomModalProps> = ({
@@ -19,13 +19,14 @@ const BottomModal: React.FC<BottomModalProps> = ({
   onDismiss,
   children,
   disableDismiss,
+  avoidKeyboard,
 }) => {
   const styles = useStyleSheet(styleService)
 
   return (
     <Modal
-      avoidKeyboard
       useNativeDriverForBackdrop
+      avoidKeyboard={avoidKeyboard === undefined ? true : avoidKeyboard}
       isVisible={visible}
       style={styles.modal}
       onBackdropPress={disableDismiss ? undefined : onDismiss}
@@ -33,7 +34,7 @@ const BottomModal: React.FC<BottomModalProps> = ({
       onSwipeComplete={disableDismiss ? undefined : onDismiss}
     >
       <SafeAreaView style={styles.bottomHalfContainer}>
-        <View style={styles.topIndicator}/>
+        <View style={styles.topIndicator} />
         {children}
       </SafeAreaView>
     </Modal>

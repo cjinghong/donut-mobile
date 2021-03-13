@@ -1,9 +1,7 @@
 import React from "react"
-import { Image } from "react-native"
+import { Image, ImageSourcePropType } from "react-native"
 import { presets } from "./wallpaper.presets"
 import { WallpaperProps } from "./wallpaper.props"
-
-const defaultImage = require("./bg.png")
 
 /**
  * For your text displaying needs.
@@ -19,7 +17,7 @@ export function Wallpaper(props: WallpaperProps) {
   const style = { ...presetToUse, ...styleOverride }
 
   // figure out which image to use
-  const source = backgroundImage || defaultImage
+  const source = backgroundImage as ImageSourcePropType
 
   return <Image source={source} style={style} />
 }

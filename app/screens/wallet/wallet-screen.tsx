@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { ActionSheetIOS, Image, View } from "react-native"
-import { Screen } from "../../components"
 import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
 import Web3 from 'web3'
 import { OpenSeaPort, Network } from 'opensea-js'
+
+import { Screen } from "../../components"
 import { WalletsContainer } from "../../components/wallet/wallets-container"
 import { useStores } from "../../models"
-import { useNavigation } from "@react-navigation/core"
 import { truncateStringMiddle } from "../../utils/strings"
 import { NFT } from "../../models/entities/nft"
-import BottomModal from "../../components/bottom-modal/bottom-modal"
 import { AddWalletModal } from "../../components/add-wallet-modal/add-wallet-modal"
+import EmptyWallet from "../../components/empty-state/empty-wallet"
 
 export const WalletScreen = observer(() => {
   const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io')
@@ -19,7 +19,6 @@ export const WalletScreen = observer(() => {
     networkName: Network.Main
   })
 
-  const navigation = useNavigation()
   const {
     wallets,
     currentWalletIndex,
@@ -56,6 +55,10 @@ export const WalletScreen = observer(() => {
     setShowAddWalletModal(true)
   }
 
+  const onAddSampleWallet = () => {
+    // TODO: - Add sample wallet
+  }
+
   const onEditWalletPress = (index: number) => {
     const options = [
       ...wallets.map(w => `${w.name}: ${truncateStringMiddle(w.publicKey, 4, 4)}`),
@@ -79,10 +82,6 @@ export const WalletScreen = observer(() => {
     })
   }
 
-  if (!wallets.length) {
-    return null
-  }
-
   return (
     <Screen style={styles.container} preset="fixed">
       <AddWalletModal
@@ -90,27 +89,35 @@ export const WalletScreen = observer(() => {
         visible={showAddWalletModal}
         onDismiss={() => setShowAddWalletModal(false)}
       />
-      <WalletsContainer
-        style={styles.walletContainer}
-        wallets={wallets}
-        currentWalletIndex={currentWalletIndex}
-        onSelectWalletIndex={setCurrentWalletIndex}
-        onWalletIndexPress={onEditWalletPress}
-      />
-      <View>
-        <Text>{(wallets[currentWalletIndex] || {}).publicKey}</Text>
-      </View>
       {
-        nfts[0] && (
-          <Image
-            style={{
-              width: 300,
-              height: 300,
-              resizeMode: 'contain',
-              backgroundColor: nfts[0].backgroundColor
-            }}
-            source={{ uri: nfts[0].imageUrlOriginal }}
-          />
+        wallets.length ? (
+          <>
+            <WalletsContainer
+              style={styles.walletContainer}
+              wallets={wallets}
+              currentWalletIndex={currentWalletIndex}
+              onSelectWalletIndex={setCurrentWalletIndex}
+              onWalletIndexPress={onEditWalletPress}
+            />
+            <View>
+              <Text>{(wallets[currentWalletIndex] || {}).publicKey}</Text>
+            </View>
+            {
+              nfts[0] && (
+                <Image
+                  style={{
+                    width: 300,
+                    height: 300,
+                    resizeMode: 'contain',
+                    backgroundColor: nfts[0].backgroundColor
+                  }}
+                  source={{ uri: nfts[0].imageUrlOriginal }}
+                />
+              )
+            }
+          </>
+        ) : (
+          <EmptyWallet onAddWallet={onAddWallet} onAddSampleWallet={onAddSampleWallet}/>
         )
       }
     </Screen>
@@ -141,5 +148,15 @@ const styleService = StyleService.create({
   },
   walletContainer: {
     marginTop: 16
+  },
+  emptyContainer: {
+    display: 'flex',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyTitle: {
+    color: 'color-gray-800',
+    fontSize: 21
   }
 })

@@ -7,10 +7,7 @@ export interface WallpaperProps {
    */
   style?: ImageStyle
 
-  /**
-   * An optional background image to override the default image.
-   */
-  backgroundImage?: string
+  backgroundImage: string
 
   /**
    * One of the different types of wallpaper presets.

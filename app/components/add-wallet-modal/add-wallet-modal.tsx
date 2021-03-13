@@ -1,8 +1,19 @@
-import React, { useEffect, useState } from "react"
-import { View, TextInput, TouchableWithoutFeedback, Keyboard, Alert } from "react-native"
+import React, { useEffect, useRef, useState } from "react"
+import {
+  View,
+  TextInput,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Alert,
+  Animated,
+  KeyboardEvent,
+  Easing,
+} from "react-native"
 import { observer } from "mobx-react-lite"
 import { StyleService, useStyleSheet } from "@ui-kitten/components"
 import Clipboard from '@react-native-clipboard/clipboard'
+import { heightPercentageToDP } from "react-native-responsive-screen"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import { typography } from "../../theme"
 import BottomModal, { BottomModalProps } from "../bottom-modal/bottom-modal"
@@ -27,6 +38,48 @@ export const AddWalletModal: React.FC<AddWalletModalProps & BottomModalProps> = 
   const styles = useStyleSheet(styleService)
   const [walletAddress, setWalletAddress] = useState('')
   const { addWallet, wallets } = useStores()
+  const { bottom } = useSafeAreaInsets()
+
+  const inputRef = useRef<any>()
+  const translateY = useRef(new Animated.Value(0)).current
+
+  useEffect(() => {
+    const keyboardWillShow = (event: KeyboardEvent) => {
+      const { duration, endCoordinates } = event
+      const { height } = endCoordinates
+      Animated.timing(
+        translateY, {
+          duration,
+          toValue: -height + bottom,
+          useNativeDriver: true,
+          easing: Easing.out(Easing.ease)
+        }
+      ).start()
+    }
+    const keyboardWillHide = (event: KeyboardEvent) => {
+      const { duration } = event
+      console.log(event)
+      Animated.timing(
+        translateY, {
+          duration,
+          toValue: 0,
+          useNativeDriver: true,
+          easing: Easing.in(Easing.ease)
+        }
+      ).start()
+    }
+    Keyboard.addListener('keyboardWillShow', keyboardWillShow)
+    Keyboard.addListener('keyboardWillHide', keyboardWillHide)
+    return () => {
+      Keyboard.removeListener('keyboardWillShow', keyboardWillShow)
+      Keyboard.removeListener('keyboardWillHide', keyboardWillHide)
+    }
+  }, [])
+
+  // Auto show keyboard
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [visible])
 
   // Reset text field
   const dismissAddWallet = () => {
@@ -37,6 +90,10 @@ export const AddWalletModal: React.FC<AddWalletModalProps & BottomModalProps> = 
   const onPasteFromClipboard = async () => {
     const text = await Clipboard.getString()
     setWalletAddress(text)
+  }
+
+  const blurInput = () => {
+    inputRef.current?.blur()
   }
 
   const onAddSampleWallet = () => {
@@ -82,12 +139,25 @@ export const AddWalletModal: React.FC<AddWalletModalProps & BottomModalProps> = 
     // }
   }
 
+  const bottomContainerStyle: any = {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    transform: [{ translateY }]
+  }
+
   return (
-    <BottomModal visible={visible} onDismiss={dismissAddWallet} {...modalProps}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <BottomModal
+      avoidKeyboard={false}
+      visible={visible}
+      onDismiss={dismissAddWallet}
+      {...modalProps}
+    >
+      <TouchableWithoutFeedback onPress={blurInput}>
         <View style={styles.container}>
-          <View />
           <TextInput
+            ref={inputRef}
             style={[styles.text, styles.input]}
             onChangeText={setWalletAddress}
             value={walletAddress}
@@ -97,7 +167,7 @@ export const AddWalletModal: React.FC<AddWalletModalProps & BottomModalProps> = 
             multiline
             blurOnSubmit={true}
           />
-          <View>
+          <Animated.View style={bottomContainerStyle}>
             <HapticTouchable style={styles.pasteButton} onPress={onPasteFromClipboard}>
               <View style={styles.pasteContainer}>
                 <Text style={[styles.text, styles.pasteText]}>Paste</Text>
@@ -107,11 +177,13 @@ export const AddWalletModal: React.FC<AddWalletModalProps & BottomModalProps> = 
             {
               showSampleWallet && (
                 <HapticTouchable onPress={onAddSampleWallet}>
-                  <Text style={[styles.text, styles.sampleWalletText]}>...or check out a sample wallet</Text>
+                  <Text style={[styles.text, styles.sampleWalletText]}>
+                    ...or check out a sample wallet
+                  </Text>
                 </HapticTouchable>
               )
             }
-          </View>
+          </Animated.View>
         </View>
       </TouchableWithoutFeedback>
     </BottomModal>
@@ -130,6 +202,7 @@ const styleService = StyleService.create({
     justifyContent: 'space-between',
   },
   input: {
+    marginTop: heightPercentageToDP('25%'),
     fontFamily: typography.primary,
     textAlign: 'center',
     fontSize: 21,
