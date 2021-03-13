@@ -13,6 +13,8 @@ import {
 import { observer } from "mobx-react-lite"
 import { StyleService } from "@ui-kitten/components"
 import { SvgUri } from 'react-native-svg'
+import ImageColors from "react-native-image-colors"
+import FastImage from 'react-native-fast-image'
 
 import { color, typography } from "../../theme"
 import { Text } from "../"
@@ -30,10 +32,15 @@ export interface NftCollectionProps {
 
 export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts }) => {
   const { width, height } = Dimensions.get('screen')
-  const scrollX = useRef(new Animated.Value(0)).current
-
   const min = width > height ? height : width
   const imageSize = min * 0.8
+
+  const scrollX = useRef(new Animated.Value(0)).current
+  const flatList = useRef<any>()
+
+  useEffect(() => {
+    flatList.current?.scrollToOffset({ animated: false, offset: 0 })
+  }, [nfts])
 
   const Backdrop = ({ scrollX }) => {
     const backgroundColor = scrollX.interpolate({
@@ -89,15 +96,13 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts }) =
         )
       }
       return (
-        <Image
-          style={[
-            styles.image,
-            {
-              width: imageSize,
-              height: imageSize,
-            }
-          ]}
-          source={{ uri: imgUrl }}
+        <FastImage
+          style={{ width: imageSize, height: imageSize }}
+          source={{
+            uri: imgUrl,
+            priority: FastImage.priority.normal,
+          }}
+          resizeMode={FastImage.resizeMode.contain}
         />
       )
     }
@@ -125,6 +130,7 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts }) =
       <FlatList
         horizontal
         pagingEnabled
+        ref={flatList}
         key={nfts.map(nft => `${nft.tokenAddress}-${nft.tokenId}`).join(',')}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => `${item.tokenAddress}-${item.tokenId}`}
