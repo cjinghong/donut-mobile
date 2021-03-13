@@ -13,7 +13,7 @@ export const NFTModel = types.model({
   externalLink: types.maybeNull(types.string),
   imagePreviewUrl: types.string,
   imageUrl: types.maybeNull(types.string),
-  imageUrlOriginal: types.string,
+  imageUrlOriginal: types.maybeNull(types.string),
   imageUrlThumbnail: types.string,
   // lastSale: types.maybeNull(types.model({
   //   eventType: types.enumeration([
@@ -58,7 +58,7 @@ export const NFTModel = types.model({
   //   }))
   // })),
   name: types.string,
-  description: types.string,
+  description: types.maybeNull(types.string),
   backgroundColor: types.maybeNull(types.string),
   openseaLink: types.string,
   tokenAddress: types.string,

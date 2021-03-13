@@ -58,7 +58,6 @@ export const AddWalletModal: React.FC<AddWalletModalProps & BottomModalProps> = 
     }
     const keyboardWillHide = (event: KeyboardEvent) => {
       const { duration } = event
-      console.log(event)
       Animated.timing(
         translateY, {
           duration,

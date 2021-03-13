@@ -12,6 +12,8 @@ import { truncateStringMiddle } from "../../utils/strings"
 import { NFT } from "../../models/entities/nft"
 import { AddWalletModal } from "../../components/add-wallet-modal/add-wallet-modal"
 import EmptyWallet from "../../components/empty-state/empty-wallet"
+import sampleWallets from "../../utils/sample-wallets"
+import { NftCollection } from "../../components/nft-collection/nft-collection"
 
 export const WalletScreen = observer(() => {
   const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io')
@@ -24,29 +26,27 @@ export const WalletScreen = observer(() => {
     currentWalletIndex,
     nfts,
     setCurrentWalletIndex,
-    setNfts
+    setNfts,
+    addWallet
   } = useStores()
 
+  // Retrieve assets if wallet exist
   useEffect(() => {
-    // Init openseaport
+    if (!wallets.length) return
     seaport.api.getAssets({
-      // owner: '0x15f7320adb990020956d29edb6ba17f3d468001e',
+      owner: wallets[currentWalletIndex].publicKey,
       limit: 10,
       offset: 0,
-      asset_contract_address: '0x61097cc82c503ff2d95ce11edd93e0f0cab30c59',
-      token_ids: [2]
+      // asset_contract_address: '0x61097cc82c503ff2d95ce11edd93e0f0cab30c59',
+      // token_ids: [2]
     })
       .then(({ assets }) => {
-        console.log(assets)
+        console.log('set assets', assets)
         setNfts(assets as NFT[])
       }).catch((error) => {
         console.log('error', error)
       })
-  }, [])
-
-  useEffect(() => {
-    !wallets.length && onAddWallet()
-  }, [wallets])
+  }, [wallets, currentWalletIndex])
 
   const styles = useStyleSheet(styleService)
   const [showAddWalletModal, setShowAddWalletModal] = useState(false)
@@ -56,7 +56,8 @@ export const WalletScreen = observer(() => {
   }
 
   const onAddSampleWallet = () => {
-    // TODO: - Add sample wallet
+    const randomWallet = sampleWallets[Math.floor(Math.random() * sampleWallets.length)]
+    addWallet(randomWallet)
   }
 
   const onEditWalletPress = (index: number) => {
@@ -99,25 +100,12 @@ export const WalletScreen = observer(() => {
               onSelectWalletIndex={setCurrentWalletIndex}
               onWalletIndexPress={onEditWalletPress}
             />
-            <View>
-              <Text>{(wallets[currentWalletIndex] || {}).publicKey}</Text>
+            <View style={styles.contentContainer}>
+              <NftCollection nfts={nfts} />
             </View>
-            {
-              nfts[0] && (
-                <Image
-                  style={{
-                    width: 300,
-                    height: 300,
-                    resizeMode: 'contain',
-                    backgroundColor: nfts[0].backgroundColor
-                  }}
-                  source={{ uri: nfts[0].imageUrlOriginal }}
-                />
-              )
-            }
           </>
         ) : (
-          <EmptyWallet onAddWallet={onAddWallet} onAddSampleWallet={onAddSampleWallet}/>
+          <EmptyWallet onAddWallet={onAddWallet} onAddSampleWallet={onAddSampleWallet} />
         )
       }
     </Screen>
@@ -144,10 +132,21 @@ const styleService = StyleService.create({
   },
   container: {
     flex: 1,
-    padding: 16,
+    backgroundColor: 'gray'
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: -10
   },
   walletContainer: {
-    marginTop: 16
+    margin: 16,
   },
   emptyContainer: {
     display: 'flex',
