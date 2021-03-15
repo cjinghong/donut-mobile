@@ -2,29 +2,17 @@ import React, { useEffect, useRef } from "react"
 import {
   Animated,
   Dimensions,
-  FlatList,
-  Image,
-  ImageProps,
   ListRenderItemInfo,
   StyleSheet,
-  TextStyle,
   View
 } from "react-native"
 import { observer } from "mobx-react-lite"
 import { StyleService } from "@ui-kitten/components"
 import { SvgUri } from 'react-native-svg'
-import ImageColors from "react-native-image-colors"
 import FastImage from 'react-native-fast-image'
+import { BlurView } from "@react-native-community/blur"
 
-import { color, typography } from "../../theme"
-import { Text } from "../"
 import { NFT } from "../../models/entities/nft"
-
-const TEXT: TextStyle = {
-  fontFamily: typography.primary,
-  fontSize: 14,
-  color: color.primary,
-}
 
 export interface NftCollectionProps {
   nfts: NFT[]
@@ -42,22 +30,6 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts }) =
     flatList.current?.scrollToOffset({ animated: false, offset: 0 })
   }, [nfts])
 
-  const Backdrop = ({ scrollX }) => {
-    const backgroundColor = scrollX.interpolate({
-      inputRange: nfts.map((_, i) => i * width),
-      outputRange: nfts.map((nft) => nft.backgroundColor || '#ffffff'),
-      extrapolate: 'clamp'
-    })
-    return (
-      <Animated.View
-        style={[
-          StyleSheet.absoluteFillObject,
-          { backgroundColor }
-        ]}
-      />
-    )
-  }
-
   const renderItem = (info: ListRenderItemInfo<NFT>) => {
     const { item, index } = info
     const imgUrl = item.imageUrlOriginal || item.imageUrl
@@ -69,40 +41,40 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts }) =
     ]
     const opacity = scrollX.interpolate({
       inputRange,
-      outputRange: [0, 1, 0],
-      extrapolate: "clamp"
+      outputRange: [0.1, 1, 0.1],
     })
     const scale = scrollX.interpolate({
       inputRange,
-      outputRange: [0.7, 1, 0.7],
-      extrapolate: "clamp"
+      outputRange: [0.4, 1, 0.4],
     })
     const translateY = scrollX.interpolate({
       inputRange,
-      outputRange: [imageSize / 2, 1, imageSize / 2],
-      extrapolate: "clamp",
+      outputRange: [imageSize, 1, imageSize],
     })
 
     const renderImage = () => {
       const extension = imgUrl.split('.').slice(-1)[0]
+      const imageStyle: any = {
+        borderRadius: 20,
+        width: imageSize,
+        height: imageSize,
+        overflow: 'hidden'
+      }
       if (extension === 'svg') {
         return (
-          <SvgUri
-            width={imageSize}
-            height={imageSize}
-            uri={imgUrl}
-            style={styles.image as ImageProps}
-          />
+          <View style={imageStyle}>
+            <SvgUri uri={imgUrl} />
+          </View>
         )
       }
       return (
         <FastImage
-          style={{ width: imageSize, height: imageSize }}
+          style={imageStyle}
           source={{
             uri: imgUrl,
             priority: FastImage.priority.normal,
           }}
-          resizeMode={FastImage.resizeMode.contain}
+          resizeMode={FastImage.resizeMode.cover}
         />
       )
     }
@@ -114,10 +86,13 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts }) =
           { width }
         ]}
       >
-        <Animated.View style={{
-          opacity,
-          transform: [{ scale }, { translateY }],
-        }}>
+        <Animated.View style={[
+          {
+            opacity,
+            transform: [{ scale }, { translateY }],
+          },
+          styles.nftImageContainer
+        ]}>
           {renderImage()}
         </Animated.View>
       </View>
@@ -125,9 +100,54 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts }) =
   }
 
   return (
-    <>
-      <Backdrop scrollX={scrollX} />
-      <FlatList
+    <View>
+      <View style={StyleSheet.absoluteFillObject}>
+        {
+          nfts.map((nft, index) => {
+            const inputRange = [
+              (index - 1) * width,
+              index * width,
+              (index + 1) * width,
+            ]
+            const opacity = scrollX.interpolate({
+              inputRange,
+              outputRange: [0, 1, 0],
+            })
+            const imgUrl = nft.imageUrlOriginal || nft.imageUrl
+            const extension = imgUrl.split('.').slice(-1)[0]
+            return (
+              <Animated.View
+                key={`${nft.tokenAddress}-${nft.tokenId}`}
+                style={[
+                  StyleSheet.absoluteFillObject,
+                  { opacity }
+                ]}
+              >
+                {
+                  extension === 'svg' ? (
+                    <SvgUri uri={imgUrl} style={StyleSheet.absoluteFillObject} />
+                  ) : (
+                    <FastImage
+                      source={{ uri: imgUrl }}
+                      style={StyleSheet.absoluteFillObject}
+                    />
+                  )
+                }
+                <FastImage
+                  source={{ uri: nft.imageUrlOriginal || nft.imageUrl }}
+                  style={StyleSheet.absoluteFillObject}
+                />
+                <BlurView
+                  blurType="light"
+                  blurAmount={60}
+                  style={StyleSheet.absoluteFillObject}
+                />
+              </Animated.View>
+            )
+          })
+        }
+      </View>
+      <Animated.FlatList
         horizontal
         pagingEnabled
         ref={flatList}
@@ -136,15 +156,12 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts }) =
         keyExtractor={(item) => `${item.tokenAddress}-${item.tokenId}`}
         data={nfts}
         renderItem={renderItem}
-        scrollEventThrottle={32}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          { useNativeDriver: false }
+          { useNativeDriver: true }
         )}
-      >
-        <Text style={TEXT}>Hello</Text>
-      </FlatList>
-    </>
+      />
+    </View>
   )
 })
 
@@ -152,9 +169,15 @@ const styles = StyleService.create({
   itemContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
-  image: {
-    resizeMode: 'contain',
+  nftImageContainer: {
+    shadowColor: '#000',
+    shadowOpacity: 0.3,
+    shadowOffset: {
+      width: 0,
+      height: 0
+    },
+    shadowRadius: 20
   }
 })

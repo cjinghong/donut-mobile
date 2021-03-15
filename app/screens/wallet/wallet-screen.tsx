@@ -41,7 +41,7 @@ export const WalletScreen = observer(() => {
       // token_ids: [2]
     })
       .then(({ assets }) => {
-        console.log('set assets', assets)
+        // console.log('set assets', assets)
         setNfts(assets as NFT[])
       }).catch((error) => {
         console.log('error', error)
@@ -132,7 +132,6 @@ const styleService = StyleService.create({
   },
   container: {
     flex: 1,
-    backgroundColor: 'gray'
   },
   contentContainer: {
     flex: 1,
