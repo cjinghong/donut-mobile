@@ -32,7 +32,7 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts }) =
 
   const renderItem = (info: ListRenderItemInfo<NFT>) => {
     const { item, index } = info
-    const imgUrl = item.imageUrlOriginal || item.imageUrl
+    const imgUrl = item.imagePreviewUrl || item.imageUrlThumbnail || item.imageUrl || item.imageUrlOriginal
 
     const inputRange = [
       (index - 0.4) * width,
@@ -113,7 +113,7 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts }) =
               inputRange,
               outputRange: [0, 1, 0],
             })
-            const imgUrl = nft.imageUrlOriginal || nft.imageUrl
+            const imgUrl = nft.imageUrlThumbnail || nft.imagePreviewUrl || nft.imageUrl || nft.imageUrlOriginal
             const extension = imgUrl.split('.').slice(-1)[0]
             return (
               <Animated.View
@@ -150,7 +150,9 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts }) =
       <Animated.FlatList
         horizontal
         pagingEnabled
+        removeClippedSubviews
         ref={flatList}
+        initialNumToRender={5}
         key={nfts.map(nft => `${nft.tokenAddress}-${nft.tokenId}`).join(',')}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item) => `${item.tokenAddress}-${item.tokenId}`}

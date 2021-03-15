@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { ActionSheetIOS, Image, View } from "react-native"
-import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
+import { ActionSheetIOS, View } from "react-native"
+import { StyleService, useStyleSheet } from "@ui-kitten/components"
 import Web3 from 'web3'
 import { OpenSeaPort, Network } from 'opensea-js'
 
 import { Screen } from "../../components"
-import { WalletsContainer } from "../../components/wallet/wallets-container"
 import { useStores } from "../../models"
 import { truncateStringMiddle } from "../../utils/strings"
 import { NFT } from "../../models/entities/nft"
@@ -14,6 +13,7 @@ import { AddWalletModal } from "../../components/add-wallet-modal/add-wallet-mod
 import EmptyWallet from "../../components/empty-state/empty-wallet"
 import sampleWallets from "../../utils/sample-wallets"
 import { NftCollection } from "../../components/nft-collection/nft-collection"
+import WalletView from "../../components/wallet-view/wallet-view"
 
 export const WalletScreen = observer(() => {
   const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io')
@@ -35,13 +35,12 @@ export const WalletScreen = observer(() => {
     if (!wallets.length) return
     seaport.api.getAssets({
       owner: wallets[currentWalletIndex].publicKey,
-      limit: 10,
+      limit: 30,
       offset: 0,
       // asset_contract_address: '0x61097cc82c503ff2d95ce11edd93e0f0cab30c59',
       // token_ids: [2]
     })
       .then(({ assets }) => {
-        // console.log('set assets', assets)
         setNfts(assets as NFT[])
       }).catch((error) => {
         console.log('error', error)
@@ -60,7 +59,7 @@ export const WalletScreen = observer(() => {
     addWallet(randomWallet)
   }
 
-  const onEditWalletPress = (index: number) => {
+  const onEditWalletPress = () => {
     const options = [
       ...wallets.map(w => `${w.name}: ${truncateStringMiddle(w.publicKey, 4, 4)}`),
       'Add New Wallet',
@@ -93,12 +92,10 @@ export const WalletScreen = observer(() => {
       {
         wallets.length ? (
           <>
-            <WalletsContainer
+            <WalletView
               style={styles.walletContainer}
-              wallets={wallets}
-              currentWalletIndex={currentWalletIndex}
-              onSelectWalletIndex={setCurrentWalletIndex}
-              onWalletIndexPress={onEditWalletPress}
+              wallet={wallets[currentWalletIndex]}
+              onWalletPress={onEditWalletPress}
             />
             <View style={styles.contentContainer}>
               <NftCollection nfts={nfts} />
