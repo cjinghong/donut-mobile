@@ -19,12 +19,14 @@ const NFTCollectionItem: React.FC<NFTItemProps> = ({ nfts }) => {
 
   const renderNfts = () => {
     // Chunk to rows of 2
-    const chunks = chunk(nfts, 2)
-    const imageWidth = (vmin / 2) - 16
+    // TODO: - On tablet chunks to 3-4 cols
+    const numberOfCols = 2
+    const chunks = chunk(nfts, numberOfCols)
     return chunks.map((nftRow) => {
       return (
         <View key={nftRow.map(row => row.name).join('-')} style={styles.row}>
           {nftRow.map((nft) => {
+            const imageWidth = vmin / nftRow.length - 16
             const imageUri = nft.imagePreviewUrl || nft.imageUrl || nft.imageUrlOriginal
             return (
               <View key={nft.name} style={[
