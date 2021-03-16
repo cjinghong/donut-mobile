@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { Image, StyleSheet, View, ViewStyle } from "react-native"
 import FastImage, { ImageStyle } from "react-native-fast-image"
 import { SvgUri, Styles } from "react-native-svg"
@@ -18,6 +18,14 @@ export interface HybridImageViewProps {
  */
 export const HybridImageView: React.FC<HybridImageViewProps> = ({ containerStyle, imageStyle, uri }) => {
   const extension = uri.split('.').slice(-1)[0]
+
+  // Svg is always loaded
+  const [imgLoaded, setImgLoaded] = useState(extension === 'svg')
+
+  const onLoad = () => {
+    setImgLoaded(true)
+  }
+
   let imgElem: Element
   if (extension === 'svg') {
     imgElem = <SvgUri uri={uri} style={[styles.image, imageStyle]} />
@@ -25,12 +33,17 @@ export const HybridImageView: React.FC<HybridImageViewProps> = ({ containerStyle
     imgElem = <FastImage
       source={{ uri, priority: FastImage.priority.normal }}
       style={[styles.image, imageStyle]}
+      onLoadEnd={onLoad}
     />
   }
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <Image source={loadingImg} style={styles.backgroundImage} />
+      {
+        !imgLoaded && (
+          <Image source={loadingImg} style={styles.backgroundImage}/>
+        )
+      }
       {imgElem}
     </View>
   )
@@ -38,8 +51,10 @@ export const HybridImageView: React.FC<HybridImageViewProps> = ({ containerStyle
 
 const styles = StyleSheet.create({
   backgroundImage: {
+    height: 200,
     position: 'absolute',
     resizeMode: 'contain',
+    width: 200
   },
   container: {
     alignItems: 'center',
@@ -47,7 +62,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   image: {
-    backgroundColor: color.background,
     height: '100%',
     width: '100%'
   }

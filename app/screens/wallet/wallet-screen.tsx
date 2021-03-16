@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { ActionSheetIOS, View } from "react-native"
-import { StyleService, useStyleSheet } from "@ui-kitten/components"
+import { Spinner, StyleService, useStyleSheet } from "@ui-kitten/components"
 import Web3 from 'web3'
 import { OpenSeaPort, Network } from 'opensea-js'
 
@@ -15,12 +15,12 @@ import sampleWallets from "../../utils/sample-wallets"
 import { NftCollection } from "../../components/nft-collection/nft-collection"
 import WalletView from "../../components/wallet-view/wallet-view"
 
-export const WalletScreen = observer(() => {
-  const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io')
-  const seaport = new OpenSeaPort(provider, {
-    networkName: Network.Main
-  })
+const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io')
+const seaport = new OpenSeaPort(provider, {
+  networkName: Network.Main
+})
 
+export const WalletScreen = observer(() => {
   const {
     wallets,
     currentWalletIndex,
@@ -29,22 +29,28 @@ export const WalletScreen = observer(() => {
     setNfts,
     addWallet
   } = useStores()
+  const [loadingNfts, setLoadingNfts] = useState(false)
 
   // Retrieve assets if wallet exist
   useEffect(() => {
     if (!wallets.length) return
-    seaport.api.getAssets({
-      owner: wallets[currentWalletIndex].publicKey,
-      limit: 30,
-      offset: 0,
-      // asset_contract_address: '0x61097cc82c503ff2d95ce11edd93e0f0cab30c59',
-      // token_ids: [2]
-    })
-      .then(({ assets }) => {
-        setNfts(assets as NFT[])
-      }).catch((error) => {
+
+    const loadNfts = async () => {
+      setLoadingNfts(true)
+      try {
+        const { assets } = await seaport.api.getAssets({
+          owner: wallets[currentWalletIndex].publicKey,
+          limit: 30,
+          offset: 0,
+        })
+        setNfts(assets)
+      } catch (error) {
         console.log('error', error)
-      })
+      }
+      setLoadingNfts(false)
+    }
+
+    loadNfts()
   }, [wallets, currentWalletIndex])
 
   const styles = useStyleSheet(styleService)
@@ -82,6 +88,25 @@ export const WalletScreen = observer(() => {
     })
   }
 
+  const renderWalletView = () => {
+    if (!wallets.length) {
+      return <EmptyWallet onAddWallet={onAddWallet} onAddSampleWallet={onAddSampleWallet} />
+    }
+    return (
+      <>
+        <WalletView
+          style={styles.walletContainer}
+          wallet={wallets[currentWalletIndex]}
+          onWalletPress={onEditWalletPress}
+        />
+        <View style={styles.contentContainer}>
+          <NftCollection nfts={nfts} loading={loadingNfts}/>
+          {/* <NftCollection nfts={nfts} loading={true}/> */}
+        </View>
+      </>
+    )
+  }
+
   return (
     <Screen style={styles.container} preset="fixed">
       <AddWalletModal
@@ -89,22 +114,7 @@ export const WalletScreen = observer(() => {
         visible={showAddWalletModal}
         onDismiss={() => setShowAddWalletModal(false)}
       />
-      {
-        wallets.length ? (
-          <>
-            <WalletView
-              style={styles.walletContainer}
-              wallet={wallets[currentWalletIndex]}
-              onWalletPress={onEditWalletPress}
-            />
-            <View style={styles.contentContainer}>
-              <NftCollection nfts={nfts} />
-            </View>
-          </>
-        ) : (
-          <EmptyWallet onAddWallet={onAddWallet} onAddSampleWallet={onAddSampleWallet} />
-        )
-      }
+      {renderWalletView()}
     </Screen>
   )
 })

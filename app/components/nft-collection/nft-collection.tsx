@@ -7,18 +7,19 @@ import {
   View
 } from "react-native"
 import { observer } from "mobx-react-lite"
-import { StyleService } from "@ui-kitten/components"
+import { Spinner, StyleService, Text } from "@ui-kitten/components"
 import { BlurView } from "@react-native-community/blur"
 
 import { NFT } from "../../models/entities/nft"
 import { HybridImageView } from "../hybrid-image-view/hybrid-image-view"
-import { color } from "../../theme"
+import DonutLoader from "../donut-loader/donut-loader"
 
 export interface NftCollectionProps {
   nfts: NFT[]
+  loading: boolean
 }
 
-export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts }) => {
+export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts, loading }) => {
   const { width, height } = Dimensions.get('screen')
   const min = width > height ? height : width
   const imageSize = min * 0.8
@@ -31,41 +32,42 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts }) =
   }, [nfts])
 
   const renderBackdrop = () => {
+    const renderNftBackdropImages = () => {
+      return nfts.map((nft, index) => {
+        const inputRange = [
+          (index - 1) * width,
+          index * width,
+          (index + 1) * width,
+        ]
+        const opacity = scrollX.interpolate({
+          inputRange,
+          outputRange: [0, 1, 0],
+        })
+        const imgUrl = nft.imageUrlThumbnail || nft.imagePreviewUrl || nft.imageUrl || nft.imageUrlOriginal
+        return (
+          <Animated.View
+            key={`${nft.tokenAddress}-${nft.tokenId}`}
+            style={[
+              StyleSheet.absoluteFillObject,
+              { opacity }
+            ]}
+          >
+            <HybridImageView
+              uri={imgUrl}
+              containerStyle={StyleSheet.absoluteFillObject}
+            />
+            <BlurView
+              blurType="light"
+              blurAmount={60}
+              style={StyleSheet.absoluteFillObject}
+            />
+          </Animated.View>
+        )
+      })
+    }
     return (
       <View style={StyleSheet.absoluteFillObject}>
-        {
-          nfts.map((nft, index) => {
-            const inputRange = [
-              (index - 1) * width,
-              index * width,
-              (index + 1) * width,
-            ]
-            const opacity = scrollX.interpolate({
-              inputRange,
-              outputRange: [0, 1, 0],
-            })
-            const imgUrl = nft.imageUrlThumbnail || nft.imagePreviewUrl || nft.imageUrl || nft.imageUrlOriginal
-            return (
-              <Animated.View
-                key={`${nft.tokenAddress}-${nft.tokenId}`}
-                style={[
-                  StyleSheet.absoluteFillObject,
-                  { opacity }
-                ]}
-              >
-                <HybridImageView
-                  uri={imgUrl}
-                  containerStyle={StyleSheet.absoluteFillObject}
-                />
-                <BlurView
-                  blurType="light"
-                  blurAmount={60}
-                  style={StyleSheet.absoluteFillObject}
-                />
-              </Animated.View>
-            )
-          })
-        }
+        {renderNftBackdropImages()}
       </View>
     )
   }
@@ -81,7 +83,7 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts }) =
     ]
     const opacity = scrollX.interpolate({
       inputRange,
-      outputRange: [0.1, 1, 0.1],
+      outputRange: [0.5, 1, 0.5],
     })
     const scale = scrollX.interpolate({
       inputRange,
@@ -89,7 +91,7 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts }) =
     })
     const translateY = scrollX.interpolate({
       inputRange,
-      outputRange: [imageSize, 1, imageSize],
+      outputRange: [height * 0.6, 1, height * 0.6],
     })
 
     const containerStyle: any = {
@@ -116,38 +118,51 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts }) =
         ]}>
           <HybridImageView
             uri={imgUrl}
+            // uri={''}
             containerStyle={containerStyle}
-            imageStyle={{ backgroundColor: item.backgroundColor || color.background }}
           />
+          <Text category="h5">{item.name}</Text>
         </Animated.View>
       </View>
     )
   }
 
   return (
-    <View>
-      {renderBackdrop()}
-      <Animated.FlatList
-        horizontal
-        pagingEnabled
-        removeClippedSubviews
-        ref={flatList}
-        initialNumToRender={5}
-        key={nfts.map(nft => `${nft.tokenAddress}-${nft.tokenId}`).join(',')}
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={(item) => `${item.tokenAddress}-${item.tokenId}`}
-        data={nfts}
-        renderItem={renderItem}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          { useNativeDriver: true }
-        )}
-      />
+    <View style={styles.container}>
+      {
+        loading ? (
+          <DonutLoader/>
+        ) : (
+          <>
+            {renderBackdrop()}
+            <Animated.FlatList
+              horizontal
+              pagingEnabled
+              removeClippedSubviews
+              ref={flatList}
+              initialNumToRender={5}
+              key={nfts.map(nft => `${nft.tokenAddress}-${nft.tokenId}`).join(',')}
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item) => `${item.tokenAddress}-${item.tokenId}`}
+              data={nfts}
+              renderItem={renderItem}
+              onScroll={Animated.event(
+                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                { useNativeDriver: true }
+              )}
+            />
+          </>
+        )
+      }
     </View>
   )
 })
 
 const styles = StyleService.create({
+  container: {
+    width: '100%',
+    height: '100%'
+  },
   itemContainer: {
     flex: 1,
     alignItems: 'center',
