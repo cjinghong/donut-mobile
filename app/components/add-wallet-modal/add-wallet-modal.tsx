@@ -14,6 +14,7 @@ import { StyleService, useStyleSheet } from "@ui-kitten/components"
 import Clipboard from '@react-native-clipboard/clipboard'
 import { heightPercentageToDP } from "react-native-responsive-screen"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import ethRegex from 'ethereum-regex'
 
 import { typography } from "../../theme"
 import BottomModal, { BottomModalProps } from "../bottom-modal/bottom-modal"
@@ -99,6 +100,7 @@ export const AddWalletModal: React.FC<AddWalletModalProps & BottomModalProps> = 
     dismissAddWallet()
   }
 
+  // TODO: - Custom modal
   const onAddWallet = () => {
     Alert.prompt(
       "Wallet Name",
@@ -122,20 +124,6 @@ export const AddWalletModal: React.FC<AddWalletModalProps & BottomModalProps> = 
       'plain-text',
       `My Wallet ${wallets.length + 1}`
     )
-    // try {
-    //   if (!name) {
-    //     setName(defaultName)
-    //   }
-    //   addWallet({
-    //     name: name || defaultName,
-    //     publicKey,
-    //     privateKey: undefined
-    //   })
-    //   navigation.navigate('home')
-    // } catch (error) {
-    //   // TODO: - Create custom alert modal
-    //   Alert.alert("Error", error.message)
-    // }
   }
 
   const bottomContainerStyle: any = {
@@ -145,6 +133,8 @@ export const AddWalletModal: React.FC<AddWalletModalProps & BottomModalProps> = 
     right: 0,
     transform: [{ translateY }]
   }
+
+  const isAddressValid = ethRegex({ exact: true }).test(walletAddress)
 
   return (
     <BottomModal
@@ -172,7 +162,7 @@ export const AddWalletModal: React.FC<AddWalletModalProps & BottomModalProps> = 
                 <Text style={[styles.text, styles.pasteText]}>Paste</Text>
               </View>
             </HapticTouchable>
-            <HapticButton size="large" onPress={onAddWallet}>Add Wallet</HapticButton>
+            <HapticButton disabled={!isAddressValid} size="large" onPress={onAddWallet}>Add Wallet</HapticButton>
             {
               showSampleWallet && (
                 <HapticTouchable onPress={onAddSampleWallet}>

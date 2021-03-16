@@ -1,6 +1,7 @@
 import { StyleService, useStyleSheet } from '@ui-kitten/components'
 import React from 'react'
-import { Dimensions, Image, Text, View } from 'react-native'
+import { Image, Text, View } from 'react-native'
+import { vmin } from '../../utils/dimensions'
 
 import { HapticButton } from '../haptic-button/haptic-button'
 import { HapticTouchable } from '../haptic-touchable/haptic-touchable'
@@ -17,12 +18,9 @@ const EmptyWallet: React.FC<EmptyWalletProps> = ({
 }) => {
   const styles = useStyleSheet(styleService)
 
-  const { width, height } = Dimensions.get('screen')
-  const min = width > height ? height : width
-
   const imageStyles = {
-    width: min * 0.4,
-    height: min * 0.4,
+    width: vmin * 0.4,
+    height: vmin * 0.4,
   }
 
   return (

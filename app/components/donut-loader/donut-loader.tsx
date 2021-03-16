@@ -1,19 +1,17 @@
 import { StyleService, Text, useStyleSheet } from '@ui-kitten/components'
 import React from 'react'
-import { Dimensions, View } from 'react-native'
+import { View } from 'react-native'
 import { Image } from 'react-native-animatable'
+import { vmin } from '../../utils/dimensions'
 
 export const image = require("../../../assets/donut.png")
 
 const DonutLoader: React.FC = () => {
   const styles = useStyleSheet(styleService)
 
-  const { width, height } = Dimensions.get('screen')
-  const min = width > height ? height : width
-
   const imageStyles = {
-    width: min * 0.4,
-    height: min * 0.4,
+    width: vmin * 0.4,
+    height: vmin * 0.4,
   }
 
   return (

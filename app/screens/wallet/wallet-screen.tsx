@@ -101,7 +101,6 @@ export const WalletScreen = observer(() => {
         />
         <View style={styles.contentContainer}>
           <NftCollection nfts={nfts} loading={loadingNfts}/>
-          {/* <NftCollection nfts={nfts} loading={true}/> */}
         </View>
       </>
     )

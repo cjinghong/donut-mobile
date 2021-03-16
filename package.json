@@ -45,6 +45,7 @@
     "browserify-zlib": "~0.1.4",
     "buffer": "^4.9.2",
     "dns.js": "^1.0.1",
+    "ethereum-regex": "^1.1.13",
     "events": "^1.0.0",
     "expo-haptics": "^9.0.0",
     "expo-localization": "9.1.0",

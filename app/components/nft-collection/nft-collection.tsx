@@ -1,18 +1,24 @@
 import React, { useEffect, useRef } from "react"
 import {
+  Alert,
   Animated,
-  Dimensions,
+  Image,
+  Linking,
   ListRenderItemInfo,
   StyleSheet,
   View
 } from "react-native"
 import { observer } from "mobx-react-lite"
-import { Spinner, StyleService, Text } from "@ui-kitten/components"
+import { Button, StyleService, Text, useStyleSheet } from "@ui-kitten/components"
 import { BlurView } from "@react-native-community/blur"
 
 import { NFT } from "../../models/entities/nft"
 import { HybridImageView } from "../hybrid-image-view/hybrid-image-view"
 import DonutLoader from "../donut-loader/donut-loader"
+import { screenHeight, screenWidth, vmin } from "../../utils/dimensions"
+import SimpleLink from "../simple-link/simple-link"
+
+const emptyImage = require('./empty.png')
 
 export interface NftCollectionProps {
   nfts: NFT[]
@@ -20,12 +26,9 @@ export interface NftCollectionProps {
 }
 
 export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts, loading }) => {
-  const { width, height } = Dimensions.get('screen')
-  const min = width > height ? height : width
-  const imageSize = min * 0.8
-
   const scrollX = useRef(new Animated.Value(0)).current
   const flatList = useRef<any>()
+  const styles = useStyleSheet(styleService)
 
   useEffect(() => {
     flatList.current?.scrollToOffset({ animated: false, offset: 0 })
@@ -35,9 +38,9 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts, loa
     const renderNftBackdropImages = () => {
       return nfts.map((nft, index) => {
         const inputRange = [
-          (index - 1) * width,
-          index * width,
-          (index + 1) * width,
+          (index - 1) * screenWidth,
+          index * screenWidth,
+          (index + 1) * screenWidth,
         ]
         const opacity = scrollX.interpolate({
           inputRange,
@@ -73,13 +76,14 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts, loa
   }
 
   const renderItem = (info: ListRenderItemInfo<NFT>) => {
+    const imageSize = vmin * 0.8
     const { item, index } = info
     const imgUrl = item.imageUrlOriginal || item.imageUrl || item.imagePreviewUrl || item.imageUrlThumbnail
 
     const inputRange = [
-      (index - 0.4) * width,
-      index * width,
-      (index + 0.4) * width,
+      (index - 0.4) * screenWidth,
+      index * screenWidth,
+      (index + 0.4) * screenWidth,
     ]
     const opacity = scrollX.interpolate({
       inputRange,
@@ -91,7 +95,7 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts, loa
     })
     const translateY = scrollX.interpolate({
       inputRange,
-      outputRange: [height * 0.6, 1, height * 0.6],
+      outputRange: [screenHeight * 0.6, 1, screenHeight * 0.6],
     })
 
     const containerStyle: any = {
@@ -106,7 +110,7 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts, loa
       <View
         style={[
           styles.itemContainer,
-          { width }
+          { width: screenWidth }
         ]}
       >
         <Animated.View style={[
@@ -127,11 +131,28 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts, loa
     )
   }
 
+  const goToOpenSea = () => {
+    const url = 'https://opensea.io'
+    if (Linking.canOpenURL(url)) {
+      Alert.alert('Navigate To OpenSea', `Do you want to navigate to ${url}?`, [
+        { text: "OK", onPress: () => Linking.openURL(url) },
+        { text: "Cancel", style: 'cancel' }
+      ])
+    }
+  }
+
+  const goToRoadmap = () => {
+    // const url = 'https://opensea.io'
+    // if (Linking.canOpenURL(url)) {
+    //   Linking.openURL(url)
+    // }
+  }
+
   return (
     <View style={styles.container}>
       {
         loading ? (
-          <DonutLoader/>
+          <DonutLoader />
         ) : (
           <>
             {renderBackdrop()}
@@ -150,6 +171,21 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts, loa
                 [{ nativeEvent: { contentOffset: { x: scrollX } } }],
                 { useNativeDriver: true }
               )}
+              bounces={!!nfts.length}
+              ListEmptyComponent={(
+                <View style={styles.emptyContainer}>
+                  <Image source={emptyImage} style={styles.emptyImage} />
+                  <Text category="h3" style={[styles.emptyText, styles.emptyTitle]}>Hold right there! 🚨</Text>
+                  <Text category="p1" style={styles.emptyText}>
+                    It seems like you don't own any NFTs. Check out some of the NFTs for
+                    sale on <SimpleLink onPress={goToOpenSea}>Open Sea</SimpleLink>.
+                  </Text>
+                  <Text category="p1" style={[styles.emptyText, styles.caption]}>
+                    The <Text style={styles.bold}>Donut NFT dealer</Text> is still a work-in-progress. You can learn more about our
+                    roadmap <SimpleLink onPress={goToRoadmap}>here</SimpleLink>.
+                  </Text>
+                </View>
+              )}
             />
           </>
         )
@@ -158,10 +194,35 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts, loa
   )
 })
 
-const styles = StyleService.create({
+const styleService = StyleService.create({
   container: {
     width: '100%',
     height: '100%'
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: vmin * 0.1,
+    width: screenWidth
+  },
+  emptyImage: {
+    resizeMode: 'contain',
+    width: vmin * 0.5,
+    height: vmin * 0.5,
+  },
+  emptyTitle: {
+    color: 'color-primary-500',
+    paddingVertical: 24,
+  },
+  emptyText: {
+    textAlign: 'center',
+    paddingBottom: 8,
+  },
+  caption: {
+    paddingTop: 16
+  },
+  bold: {
+    fontWeight: '800'
   },
   itemContainer: {
     flex: 1,
