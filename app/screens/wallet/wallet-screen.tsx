@@ -14,6 +14,7 @@ import EmptyWallet from "../../components/empty-state/empty-wallet"
 import sampleWallets from "../../utils/sample-wallets"
 import { NftCollection } from "../../components/nft-collection/nft-collection"
 import WalletView from "../../components/wallet-view/wallet-view"
+import { NftGallery } from "../../components/nft-gallery/nft-gallery"
 
 const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io')
 const seaport = new OpenSeaPort(provider, {
@@ -43,7 +44,8 @@ export const WalletScreen = observer(() => {
           limit: 30,
           offset: 0,
         })
-        setNfts(assets)
+        // console.log(assets)
+        setNfts(assets as any)
       } catch (error) {
         console.log('error', error)
       }
@@ -100,7 +102,8 @@ export const WalletScreen = observer(() => {
           onWalletPress={onEditWalletPress}
         />
         <View style={styles.contentContainer}>
-          <NftCollection nfts={nfts} loading={loadingNfts}/>
+          {/* <NftCollection nfts={nfts} loading={loadingNfts}/> */}
+          <NftGallery nfts={nfts} loading={loadingNfts}/>
         </View>
       </>
     )
@@ -141,14 +144,15 @@ const styleService = StyleService.create({
   },
   contentContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    zIndex: -10
+    paddingTop: 16
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    // position: 'absolute',
+    // top: 0,
+    // bottom: 0,
+    // left: 0,
+    // right: 0,
+    // zIndex: -10
   },
   walletContainer: {
     margin: 16,

@@ -15,6 +15,18 @@ export const NFTModel = types.model({
   imageUrl: types.maybeNull(types.string),
   imageUrlOriginal: types.maybeNull(types.string),
   imageUrlThumbnail: types.string,
+  collection: types.model({
+    createdDate: types.Date,
+    description: types.string,
+    externalLink: types.maybeNull(types.string),
+    name: types.string,
+    payoutAddress: types.maybeNull(types.string)
+  }),
+  traits: types.maybeNull(types.array(types.model({
+    trait_type: types.maybeNull(types.string),
+    trait_count: types.maybeNull(types.number),
+    value: types.maybeNull(types.union(types.string, types.number)),
+  }))),
   // lastSale: types.maybeNull(types.model({
   //   eventType: types.enumeration([
   //     "created",

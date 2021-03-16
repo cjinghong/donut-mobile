@@ -9,7 +9,7 @@ import {
   View
 } from "react-native"
 import { observer } from "mobx-react-lite"
-import { Button, StyleService, Text, useStyleSheet } from "@ui-kitten/components"
+import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
 import { BlurView } from "@react-native-community/blur"
 
 import { NFT } from "../../models/entities/nft"
@@ -76,7 +76,7 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts, loa
   }
 
   const renderItem = (info: ListRenderItemInfo<NFT>) => {
-    const imageSize = vmin * 0.8
+    const imageSize = vmin * 0.9
     const { item, index } = info
     const imgUrl = item.imageUrlOriginal || item.imageUrl || item.imagePreviewUrl || item.imageUrlThumbnail
 
@@ -89,14 +89,14 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts, loa
       inputRange,
       outputRange: [0.5, 1, 0.5],
     })
-    const scale = scrollX.interpolate({
-      inputRange,
-      outputRange: [0.4, 1, 0.4],
-    })
-    const translateY = scrollX.interpolate({
-      inputRange,
-      outputRange: [screenHeight * 0.6, 1, screenHeight * 0.6],
-    })
+    // const scale = scrollX.interpolate({
+    //   inputRange,
+    //   outputRange: [0.4, 1, 0.4],
+    // })
+    // const translateY = scrollX.interpolate({
+    //   inputRange,
+    //   outputRange: [screenHeight * 0.6, 1, screenHeight * 0.6],
+    // })
 
     const containerStyle: any = {
       borderRadius: 20,
@@ -116,7 +116,10 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts, loa
         <Animated.View style={[
           {
             opacity,
-            transform: [{ scale }, { translateY }],
+            transform: [
+              // { scale },
+              // { translateY }
+            ],
           },
           styles.nftImageContainer
         ]}>
