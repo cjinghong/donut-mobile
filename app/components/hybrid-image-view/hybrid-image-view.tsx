@@ -18,10 +18,11 @@ export interface HybridImageViewProps {
 
 type FileType = 'video' | 'image' | 'svg'
 const getFileType = (url: string): FileType => {
+  const videoExts = ['mp4']
   const extension = url.split('.').slice(-1)[0]
   if (extension === 'svg') {
     return 'svg'
-  } else if (extension === 'mp4') {
+  } else if (videoExts.includes(extension)) {
     return 'video'
   }
   return 'image'
@@ -47,7 +48,7 @@ export const HybridImageView: React.FC<HybridImageViewProps> = ({
   }
 
   const renderImgElem = (url: string, defaultStyle: any, onLoad?: () => void) => {
-    const fileType = getFileType(uri)
+    const fileType = getFileType(url)
     if (fileType === 'svg') {
       return (
         <SvgCssUri

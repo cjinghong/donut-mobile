@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/core"
-import { Image, View } from "react-native"
+import { ScrollView, Image, View, NativeScrollEvent, NativeSyntheticEvent } from "react-native"
 import { SharedElement } from "react-navigation-shared-element"
-import { ScrollView } from "react-native-gesture-handler"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import { useStores } from "../../models"
 import { HybridImageView } from "../../components/hybrid-image-view/hybrid-image-view"
-import { screenHeight, screenWidth, vmin } from "../../utils/dimensions"
+import { screenWidth } from "../../utils/dimensions"
 import { HomeParamList } from "../../navigation/home-navigator"
 import { color } from "../../theme"
 
@@ -20,6 +19,7 @@ const NftDetailsScreen = observer(function NftDetailsScreen() {
   const navigation = useNavigation()
   const { top } = useSafeAreaInsets()
   const { nfts } = useStores()
+
   const { params } = useRoute<RouteProp<HomeParamList, 'nftDetails'>>()
   const { nftId } = params || {}
 
@@ -59,6 +59,16 @@ const NftDetailsScreen = observer(function NftDetailsScreen() {
       })
   }, [])
 
+  const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const { nativeEvent } = event
+    const { contentOffset } = nativeEvent
+    const { y } = contentOffset
+
+    if (y <= -150) {
+      navigation.goBack()
+    }
+  }
+
   const imageContainerStyles = [
     styles.nftContainer,
     { backgroundColor: selectedNft.backgroundColor || 'transparent' },
@@ -66,10 +76,14 @@ const NftDetailsScreen = observer(function NftDetailsScreen() {
   ]
 
   return (
-    <ScrollView style={[
-      { paddingTop: top + 8 },
-      styles.container
-    ]}>
+    <ScrollView
+      style={[
+        { paddingTop: top + 8 },
+        styles.container
+      ]}
+      onScroll={onScroll}
+      scrollEventThrottle={32}
+    >
       <SharedElement id={nftId}>
         <View style={imageContainerStyles}>
           <HybridImageView
