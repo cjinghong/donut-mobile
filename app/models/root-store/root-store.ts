@@ -13,7 +13,6 @@ export const RootStoreModel = types
     wallets: types.optional(types.array(WalletModel), []),
     currentWalletIndex: types.optional(types.number, 0),
     nfts: types.optional(types.array(NFTModel), []),
-    currentSelectedNftId: types.maybeNull(types.string)
   })
   .actions((self) => ({
     setOnboarded: () => {
@@ -33,10 +32,7 @@ export const RootStoreModel = types
     },
     setNfts: (nfts: NFT[]) => {
       self.nfts = cast(nfts)
-    },
-    setCurrentSelectedNftId: (id: string) => {
-      self.currentSelectedNftId = id
-    },
+    }
   }))
 
 /**

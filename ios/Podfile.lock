@@ -317,6 +317,8 @@ PODS:
     - React
   - RNScreens (2.13.0):
     - React-Core
+  - RNSharedElement (0.7.0):
+    - React
   - RNSVG (12.1.0):
     - React
   - SDWebImage (5.10.4):
@@ -403,6 +405,7 @@ DEPENDENCIES:
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNOS (from `../node_modules/react-native-os`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSharedElement (from `../node_modules/react-native-shared-element`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - secp256k1.c (= 0.1.2)
   - TcpSockets (from `../node_modules/react-native-tcp`)
@@ -528,6 +531,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-os"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSharedElement:
+    :path: "../node_modules/react-native-shared-element"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   TcpSockets:
@@ -613,6 +618,7 @@ SPEC CHECKSUMS:
   RNKeychain: b8e0711b959a19c5b057d1e970d3c83d159b6da5
   RNOS: 6f2f9a70895bbbfbdad7196abd952e7b01d45027
   RNScreens: 13f23e5498fb4aa749d19a5eda7f8792fbb9d01f
+  RNSharedElement: 00b1a1420d213a34459bb9a5aacabb38107d7948
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   SDWebImage: c666b97e1fa9c64b4909816a903322018f0a9c84
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21

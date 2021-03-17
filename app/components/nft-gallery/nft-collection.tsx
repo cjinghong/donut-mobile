@@ -5,7 +5,7 @@ import { chunk } from 'lodash'
 import React, { useState } from 'react'
 import { Image, StyleSheet, View } from 'react-native'
 import Collapsible from 'react-native-collapsible'
-import { useStores } from '../../models'
+import { SharedElement } from 'react-navigation-shared-element'
 
 import { NFT } from '../../models/entities/nft'
 import { screenWidth } from '../../utils/dimensions'
@@ -20,14 +20,12 @@ interface NFTCollectionProps {
 
 const NFTCollection: React.FC<NFTCollectionProps> = ({ nfts, defaultIsOpen }) => {
   const navigation = useNavigation()
-  const { setCurrentSelectedNftId } = useStores()
   const styles = useStyleSheet(styleService)
   const [isOpen, setIsOpen] = useState(defaultIsOpen || false)
   const [currentFont, setCurrentFont] = useState(24)
 
   const onSelectNft = (nft: NFT) => {
-    setCurrentSelectedNftId(nft.id)
-    navigation.navigate('nftDetails')
+    navigation.navigate('nftDetails', { nftId: nft.id })
   }
 
   const renderNfts = () => {
@@ -68,17 +66,15 @@ const NFTCollection: React.FC<NFTCollectionProps> = ({ nfts, defaultIsOpen }) =>
 
             const imageUri = nft.imagePreviewUrl || nft.imageUrl || nft.imageUrlOriginal
             return (
-              <HapticTouchable key={nft.name} onPress={() => onSelectNft(nft)}>
-                <View style={[
-                  styles.nftContainer,
-                  { width: imageWidth, height: imageWidth }
-                ]}>
-                  {
-                    imageUri && (
-                      <HybridImageView uri={imageUri} />
-                    )
-                  }
-                </View>
+              <HapticTouchable key={nft.id} onPress={() => onSelectNft(nft)}>
+                <SharedElement id={nft.id}>
+                  <View style={[
+                    styles.nftContainer,
+                    { width: imageWidth, height: imageWidth }
+                  ]}>
+                    <HybridImageView uri={imageUri} />
+                  </View>
+                </SharedElement>
               </HapticTouchable>
             )
           })}

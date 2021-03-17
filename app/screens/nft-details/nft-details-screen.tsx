@@ -3,38 +3,43 @@ import { observer } from "mobx-react-lite"
 import { Screen } from "../../components"
 import { useStores } from "../../models"
 import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
-import { useNavigation } from "@react-navigation/core"
-import { NftCollection } from "../../components/nft-collection/nft-collection"
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/core"
 import { View } from "react-native"
 import { HybridImageView } from "../../components/hybrid-image-view/hybrid-image-view"
 import { screenHeight } from "../../utils/dimensions"
+import { SharedElement } from "react-navigation-shared-element"
+import { HomeParamList } from "../../navigation/home-navigator"
 
-export const NftDetailsScreen = observer(function NftDetailsScreen() {
+const NftDetailsScreen = observer(function NftDetailsScreen() {
   const styles = useStyleSheet(styleService)
   const navigation = useNavigation()
-  const { nfts, currentSelectedNftId } = useStores()
+  const { nfts } = useStores()
+  const { params } = useRoute<RouteProp<HomeParamList, 'nftDetails'>>()
+  const { nftId } = params || {}
 
   useEffect(() => {
-    if (!currentSelectedNftId) {
+    if (!nftId) {
       navigation.goBack()
     }
-  }, [currentSelectedNftId])
+  }, [nftId])
 
-  if (!currentSelectedNftId) {
+  if (!nftId) {
     return null
   }
 
-  const selectedNft = nfts.find((nft) => nft.id === currentSelectedNftId)
+  const selectedNft = nfts.find((nft) => nft.id === nftId)
   const imageUri = selectedNft.imageUrl || selectedNft.imagePreviewUrl || selectedNft.imageUrlThumbnail
 
   return (
     <Screen style={styles.container}>
       <View style={styles.nftContainer}>
-        <HybridImageView
-          uri={imageUri}
-          higherQualityUri={selectedNft.imageUrlOriginal}
-          resizeMode="contain"
-        />
+        <SharedElement id={nftId}>
+          <HybridImageView
+            uri={imageUri}
+            higherQualityUri={selectedNft.imageUrlOriginal}
+            resizeMode="contain"
+          />
+        </SharedElement>
       </View>
     </Screen>
   )
@@ -49,3 +54,5 @@ const styleService = StyleService.create({
     height: screenHeight * 0.5
   },
 })
+
+export default NftDetailsScreen
