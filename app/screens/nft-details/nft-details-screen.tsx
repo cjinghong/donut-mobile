@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/core"
-import { ScrollView, Image, View, NativeScrollEvent, NativeSyntheticEvent } from "react-native"
+import { ScrollView, Image, View, NativeScrollEvent, NativeSyntheticEvent, Animated } from "react-native"
 import { SharedElement } from "react-navigation-shared-element"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
@@ -13,12 +13,14 @@ import { HomeParamList } from "../../navigation/home-navigator"
 import { color } from "../../theme"
 
 const CONTAINER_PADDING = 16
+const SCROLL_DISMISS_THRESHOLD = 170
 
 const NftDetailsScreen = observer(function NftDetailsScreen() {
   const styles = useStyleSheet(styleService)
   const navigation = useNavigation()
   const { top } = useSafeAreaInsets()
   const { nfts } = useStores()
+  const scrollY = useRef(new Animated.Value(0)).current
 
   const { params } = useRoute<RouteProp<HomeParamList, 'nftDetails'>>()
   const { nftId } = params || {}
@@ -64,7 +66,7 @@ const NftDetailsScreen = observer(function NftDetailsScreen() {
     const { contentOffset } = nativeEvent
     const { y } = contentOffset
 
-    if (y <= -150) {
+    if (y <= -SCROLL_DISMISS_THRESHOLD) {
       navigation.goBack()
     }
   }
@@ -75,34 +77,80 @@ const NftDetailsScreen = observer(function NftDetailsScreen() {
     { width: imageSize.width, height: imageSize.height }
   ]
 
+  const translateY = scrollY.interpolate({
+    inputRange: [-SCROLL_DISMISS_THRESHOLD, -SCROLL_DISMISS_THRESHOLD + 70, 0],
+    outputRange: [SCROLL_DISMISS_THRESHOLD - 50, 50, -100],
+  })
+
+  const scale = scrollY.interpolate({
+    inputRange: [-SCROLL_DISMISS_THRESHOLD, -SCROLL_DISMISS_THRESHOLD + 70, 0],
+    outputRange: [1, 0.9, 0.1],
+  })
+  const opacity = scrollY.interpolate({
+    inputRange: [-SCROLL_DISMISS_THRESHOLD + 50, -SCROLL_DISMISS_THRESHOLD + 70, 0],
+    outputRange: [1, 0.5, 0],
+  })
+
   return (
-    <ScrollView
-      style={[
-        { paddingTop: top + 8 },
-        styles.container
-      ]}
-      onScroll={onScroll}
-      scrollEventThrottle={32}
-    >
-      <SharedElement id={nftId}>
-        <View style={imageContainerStyles}>
-          <HybridImageView
-            videoControls
-            uri={imageUri}
-            higherQualityUri={selectedNft.imageUrlOriginal}
-            resizeMode="contain"
-          />
+    <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        <Animated.View style={{
+          paddingTop: top,
+          opacity,
+          transform: [{ translateY }, { scale }]
+        }}>
+          <Text category="h5" style={styles.headerText}>Pull down to go back</Text>
+        </Animated.View>
+      </View>
+      <Animated.ScrollView
+        style={[
+          { paddingTop: top + 8 },
+          styles.scrollView
+        ]}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: true, listener: onScroll }
+        )}
+        scrollEventThrottle={32}
+      >
+        <View style={styles.contentContainer}>
+          <SharedElement id={nftId}>
+            <View style={imageContainerStyles}>
+              <HybridImageView
+                videoControls
+                uri={imageUri}
+                higherQualityUri={selectedNft.imageUrlOriginal}
+                resizeMode="contain"
+              />
+            </View>
+          </SharedElement>
         </View>
-      </SharedElement>
-    </ScrollView>
+      </Animated.ScrollView>
+    </View>
   )
 })
 
 const styleService = StyleService.create({
+  headerContainer: {
+    position: 'absolute',
+    height: SCROLL_DISMISS_THRESHOLD,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  headerText: {
+    color: 'color-primary-500'
+  },
   container: {
     flex: 1,
     backgroundColor: color.background,
+  },
+  scrollView: {
+    flex: 1,
     padding: CONTAINER_PADDING,
+  },
+  contentContainer: {
+
   },
   nftContainer: {
     overflow: 'hidden',
