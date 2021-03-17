@@ -1,7 +1,7 @@
-import React, { useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Image, StyleSheet, View, ViewStyle } from "react-native"
 import FastImage, { ImageStyle } from "react-native-fast-image"
-import { SvgUri, Styles } from "react-native-svg"
+import { SvgUri, Styles, SvgCssUri } from "react-native-svg"
 import Video from 'react-native-video'
 
 const loadingImg = require("./loading.gif")
@@ -28,18 +28,40 @@ const getFileType = (url: string): FileType => {
  * Also includes loading indicator before the image is loaded
  */
 export const HybridImageView: React.FC<HybridImageViewProps> = ({ containerStyle, imageStyle, uri }) => {
+  const isMounted = useRef(true)
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false
+    }
+  }, [])
+
   const fileType = getFileType(uri)
 
   // Other than images, its always loaded
   const [imgLoaded, setImgLoaded] = useState(fileType !== 'image')
 
   const onLoad = () => {
-    setImgLoaded(true)
+    if (isMounted) {
+      setImgLoaded(true)
+    }
   }
 
   let imgElem: Element
   if (fileType === 'svg') {
-    imgElem = <SvgUri uri={uri} style={[styles.image, imageStyle]} />
+    // imgElem = (
+    //   <SvgUri
+    //     uri={uri}
+    //     style={[styles.image, imageStyle]}
+    //   />
+    // )
+    imgElem = (
+      <SvgCssUri
+        uri={uri}
+        style={[styles.image, imageStyle]}
+        fill={"black"}
+      />
+    )
   } else if (fileType === 'video') {
     imgElem = (
       <Video source={{ uri }} // Can be a URL or a local file.
@@ -55,6 +77,30 @@ export const HybridImageView: React.FC<HybridImageViewProps> = ({ containerStyle
       onLoadEnd={onLoad}
     />
   }
+
+  // imgElem = <SvgUri
+  //     uri="https://storage.opensea.io/files/246fefb9491d5223c65de2152498cbb3.svg"
+  //     // uri={uri}
+  //     style={[styles.image, imageStyle, { backgroundColor: 'white' }]}
+  //     width={200}
+  //     height={200}
+  //   />
+
+  // if (uri === 'https://storage.opensea.io/files/246fefb9491d5223c65de2152498cbb3.svg') {
+  //   console.log('ft', uri)
+  //   // imgElem = <FastImage
+  //   //   source={{ uri: '', priority: FastImage.priority.normal }}
+  //   //   style={[styles.image, imageStyle]}
+  //   //   onLoadEnd={onLoad}
+  //   // />
+  //   imgElem = (
+  //     <SvgCssUri
+  //       uri={uri}
+  //       style={[styles.image, imageStyle]}
+  //       fill={"black"}
+  //     />
+  //   )
+  // }
 
   return (
     <View style={[styles.container, containerStyle]}>

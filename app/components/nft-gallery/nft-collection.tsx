@@ -1,8 +1,11 @@
+import { BlurView } from '@react-native-community/blur'
+import { useNavigation } from '@react-navigation/core'
 import { Icon, StyleService, Text, useStyleSheet } from '@ui-kitten/components'
 import { chunk } from 'lodash'
 import React, { useState } from 'react'
-import { View } from 'react-native'
+import { Image, StyleSheet, View } from 'react-native'
 import Collapsible from 'react-native-collapsible'
+import { useStores } from '../../models'
 
 import { NFT } from '../../models/entities/nft'
 import { screenWidth } from '../../utils/dimensions'
@@ -16,14 +19,15 @@ interface NFTCollectionProps {
 }
 
 const NFTCollection: React.FC<NFTCollectionProps> = ({ nfts, defaultIsOpen }) => {
+  const navigation = useNavigation()
+  const { setCurrentSelectedNftId } = useStores()
   const styles = useStyleSheet(styleService)
   const [isOpen, setIsOpen] = useState(defaultIsOpen || false)
   const [currentFont, setCurrentFont] = useState(24)
 
-  const collectionName = nfts[0].collection.name
-
   const onSelectNft = (nft: NFT) => {
-    console.log(nft.name)
+    setCurrentSelectedNftId(nft.id)
+    navigation.navigate('nftDetails')
   }
 
   const renderNfts = () => {
@@ -53,10 +57,12 @@ const NFTCollection: React.FC<NFTCollectionProps> = ({ nfts, defaultIsOpen }) =>
             // if no NFT is available
             if (!nft) {
               return (
-                <View key={`nft-placeholder-${index}`} style={[
-                  styles.nftContainer,
-                  { width: imageWidth, height: imageWidth }
-                ]} />
+                <View key={`nft-placeholder-${index}`}>
+                  <View style={[
+                    styles.nftContainer,
+                    { width: imageWidth, height: imageWidth }
+                  ]} />
+                </View>
               )
             }
 
@@ -81,6 +87,10 @@ const NFTCollection: React.FC<NFTCollectionProps> = ({ nfts, defaultIsOpen }) =>
     })
   }
 
+  const { collection } = nfts[0]
+  const { name } = collection
+  const headerBackgroundImage = collection.featuredImageUrl || collection.imageUrl || collection.largeImageUrl
+
   return (
     <View>
       <HapticTouchable onPress={() => setIsOpen(!isOpen)}>
@@ -96,7 +106,7 @@ const NFTCollection: React.FC<NFTCollectionProps> = ({ nfts, defaultIsOpen }) =>
               }
             }}
           >
-            {collectionName}
+            {name}
           </Text>
           <View style={{
             transform: [{ rotate: isOpen ? '180deg' : '0deg' }]
@@ -110,6 +120,15 @@ const NFTCollection: React.FC<NFTCollectionProps> = ({ nfts, defaultIsOpen }) =>
       </HapticTouchable>
 
       <Collapsible style={styles.collapsible} collapsed={!isOpen}>
+        <Image
+          source={{ uri: headerBackgroundImage }}
+          style={StyleSheet.absoluteFillObject}
+        />
+        <BlurView
+          blurType="light"
+          blurAmount={40}
+          style={StyleSheet.absoluteFillObject}
+        />
         {renderNfts()}
       </Collapsible>
     </View>

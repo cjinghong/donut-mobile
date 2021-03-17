@@ -8,7 +8,7 @@ import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
 import { NFT } from "../../models/entities/nft"
 import NFTCollection from "./nft-collection"
 import SimpleLink from "../simple-link/simple-link"
-import { screenWidth, vmin } from "../../utils/dimensions"
+import { vmin } from "../../utils/dimensions"
 const emptyImage = require('./empty.png')
 
 export interface NftGalleryProps {

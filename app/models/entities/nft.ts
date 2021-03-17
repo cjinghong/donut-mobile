@@ -10,17 +10,26 @@ import { Instance, types } from "mobx-state-tree"
 // })
 
 export const NFTModel = types.model({
+  // Unique generated id based on the tokenId and the tokenAddress
+  id: types.string,
+  tokenAddress: types.string,
+  tokenId: types.string,
+  name: types.string,
+  openseaLink: types.string,
   externalLink: types.maybeNull(types.string),
   imagePreviewUrl: types.string,
   imageUrl: types.maybeNull(types.string),
   imageUrlOriginal: types.maybeNull(types.string),
   imageUrlThumbnail: types.string,
   collection: types.model({
+    name: types.string,
     createdDate: types.Date,
     description: types.string,
     externalLink: types.maybeNull(types.string),
-    name: types.string,
-    payoutAddress: types.maybeNull(types.string)
+    payoutAddress: types.maybeNull(types.string),
+    imageUrl: types.string,
+    featuredImageUrl: types.maybeNull(types.string),
+    largeImageUrl: types.maybeNull(types.string),
   }),
   traits: types.maybeNull(types.array(types.model({
     trait_type: types.maybeNull(types.string),
@@ -69,12 +78,8 @@ export const NFTModel = types.model({
   //     usdPrice: types.maybe(types.string),
   //   }))
   // })),
-  name: types.string,
   description: types.maybeNull(types.string),
   backgroundColor: types.maybeNull(types.string),
-  openseaLink: types.string,
-  tokenAddress: types.string,
-  tokenId: types.string,
 })
 
 export interface NFT extends Instance<typeof NFTModel> { }

@@ -12,7 +12,8 @@ export const RootStoreModel = types
     onboarded: types.optional(types.boolean, false),
     wallets: types.optional(types.array(WalletModel), []),
     currentWalletIndex: types.optional(types.number, 0),
-    nfts: types.optional(types.array(NFTModel), [])
+    nfts: types.optional(types.array(NFTModel), []),
+    currentSelectedNftId: types.maybeNull(types.string)
   })
   .actions((self) => ({
     setOnboarded: () => {
@@ -23,16 +24,18 @@ export const RootStoreModel = types
         throw Error('This wallet already exist!')
       } else if (!wallet.publicKey) {
         throw Error('Public key cannot be empty.')
-      } else {
-        self.wallets = cast([...self.wallets, wallet])
-        self.currentWalletIndex = self.wallets.length - 1
       }
+      self.wallets = cast([...self.wallets, wallet])
+      self.currentWalletIndex = self.wallets.length - 1
     },
     setCurrentWalletIndex: (index: number) => {
       self.currentWalletIndex = index
     },
     setNfts: (nfts: NFT[]) => {
       self.nfts = cast(nfts)
+    },
+    setCurrentSelectedNftId: (id: string) => {
+      self.currentSelectedNftId = id
     },
   }))
 

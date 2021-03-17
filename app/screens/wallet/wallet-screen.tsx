@@ -33,26 +33,29 @@ export const WalletScreen = observer(() => {
 
   // Retrieve assets if wallet exist
   useEffect(() => {
-    if (!wallets.length) return
-
     const loadNfts = async () => {
       setLoadingNfts(true)
       try {
         const { assets } = await seaport.api.getAssets({
           owner: wallets[currentWalletIndex].publicKey,
-          limit: 30,
+          limit: 999999999999,
           offset: 0,
         })
-        // console.log(assets)
-        setNfts(assets as any)
+        setNfts(
+          assets.map((a) => ({
+            ...a,
+            id: `${a.tokenId}-${a.tokenAddress}`
+          })) as any
+        )
       } catch (error) {
         console.log('error', error)
       }
       setLoadingNfts(false)
     }
-
-    loadNfts()
-  }, [wallets, currentWalletIndex])
+    if (wallets.length) {
+      loadNfts()
+    }
+  }, [wallets.length, currentWalletIndex])
 
   const styles = useStyleSheet(styleService)
   const [showAddWalletModal, setShowAddWalletModal] = useState(false)
@@ -91,7 +94,12 @@ export const WalletScreen = observer(() => {
 
   const renderWalletView = () => {
     if (!wallets.length) {
-      return <EmptyWallet onAddWallet={onAddWallet} onAddSampleWallet={onAddSampleWallet} />
+      return (
+        <EmptyWallet
+          onAddWallet={onAddWallet}
+          onAddSampleWallet={onAddSampleWallet}
+        />
+      )
     }
     return (
       <>

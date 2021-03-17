@@ -4,9 +4,12 @@ import { WalletScreen } from "../screens/wallet/wallet-screen"
 import { useStores } from "../models"
 import { useNavigation } from "@react-navigation/core"
 import { observer } from "mobx-react-lite"
+import { NftDetailsScreen } from "../screens/nft-details/nft-details-screen"
+import { NFT } from "../models/entities/nft"
 
 export type HomeParamList = {
   wallet: undefined
+  nftDetails: { nft: NFT }
 }
 export type HomeNavigatorType = StackNavigationProp<HomeParamList>;
 
@@ -30,6 +33,7 @@ export const HomeNavigator = observer(() => {
       }}
     >
       <Stack.Screen name="wallet" component={WalletScreen} />
+      <Stack.Screen name="nftDetails" component={NftDetailsScreen} />
     </Stack.Navigator>
   )
 })

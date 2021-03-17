@@ -1,25 +1,34 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle } from "react-native"
-import { Screen, Text } from "../../components"
-// import { useNavigation } from "@react-navigation/native"
-// import { useStores } from "../../models"
-import { color } from "../../theme"
-
-const ROOT: ViewStyle = {
-  backgroundColor: color.palette.black,
-  flex: 1,
-}
+import { Screen } from "../../components"
+import { useStores } from "../../models"
+import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
+import { useNavigation } from "@react-navigation/core"
 
 export const NftDetailsScreen = observer(function NftDetailsScreen() {
-  // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
+  const styles = useStyleSheet(styleService)
+  const navigation = useNavigation()
+  const { nfts, currentSelectedNftId } = useStores()
 
-  // Pull in navigation via hook
-  // const navigation = useNavigation()
+  useEffect(() => {
+    if (!currentSelectedNftId) {
+      navigation.goBack()
+    }
+  }, [currentSelectedNftId])
+
+  if (!currentSelectedNftId) {
+    return null
+  }
+
   return (
-    <Screen style={ROOT} preset="scroll">
-      <Text preset="header" text="" />
+    <Screen style={styles.container} preset="scroll">
+      <Text>{currentSelectedNftId}</Text>
     </Screen>
   )
+})
+
+const styleService = StyleService.create({
+  container: {
+    flex: 1,
+  }
 })
