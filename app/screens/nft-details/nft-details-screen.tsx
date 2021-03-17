@@ -15,7 +15,7 @@ import { color } from "../../theme"
 
 const arrowAnim = require('./arrow-anim.json')
 const CONTAINER_PADDING = 16
-const SCROLL_DISMISS_THRESHOLD = 170
+const SCROLL_DISMISS_THRESHOLD = 150
 
 const NftDetailsScreen = observer(function NftDetailsScreen() {
   const styles = useStyleSheet(styleService)
@@ -31,6 +31,7 @@ const NftDetailsScreen = observer(function NftDetailsScreen() {
     width: screenWidth - CONTAINER_PADDING * 2,
     height: screenWidth - CONTAINER_PADDING * 2
   })
+  const [dismissing, setDismissing] = useState(false)
 
   useEffect(() => {
     if (!nftId) {
@@ -69,6 +70,7 @@ const NftDetailsScreen = observer(function NftDetailsScreen() {
     const { y } = contentOffset
 
     if (y <= -SCROLL_DISMISS_THRESHOLD) {
+      setDismissing(true)
       navigation.goBack()
     }
   }
@@ -80,15 +82,15 @@ const NftDetailsScreen = observer(function NftDetailsScreen() {
   ]
 
   const translateY = scrollY.interpolate({
-    inputRange: [-SCROLL_DISMISS_THRESHOLD, -SCROLL_DISMISS_THRESHOLD + 70, 0],
-    outputRange: [SCROLL_DISMISS_THRESHOLD / 2, 20, -100],
+    inputRange: [-SCROLL_DISMISS_THRESHOLD, -SCROLL_DISMISS_THRESHOLD + SCROLL_DISMISS_THRESHOLD * 0.4, 0],
+    outputRange: [SCROLL_DISMISS_THRESHOLD / 2 - SCROLL_DISMISS_THRESHOLD * 0.2, 20, -100],
   })
   const scale = scrollY.interpolate({
-    inputRange: [-SCROLL_DISMISS_THRESHOLD, -SCROLL_DISMISS_THRESHOLD + 70, 0],
+    inputRange: [-SCROLL_DISMISS_THRESHOLD, -SCROLL_DISMISS_THRESHOLD + SCROLL_DISMISS_THRESHOLD * 0.4, 0],
     outputRange: [1, 0.9, 0.1],
   })
   const opacity = scrollY.interpolate({
-    inputRange: [-SCROLL_DISMISS_THRESHOLD + 50, -SCROLL_DISMISS_THRESHOLD + 70, 0],
+    inputRange: [-SCROLL_DISMISS_THRESHOLD + SCROLL_DISMISS_THRESHOLD * 0.3, -SCROLL_DISMISS_THRESHOLD + SCROLL_DISMISS_THRESHOLD * 0.4, 0],
     outputRange: [1, 0.5, 0],
   })
   const progress = scrollY.interpolate({
@@ -98,19 +100,23 @@ const NftDetailsScreen = observer(function NftDetailsScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Animated.View style={[
-          styles.headerAnimTextContainer,
-          {
-            paddingTop: top,
-            opacity,
-            transform: [{ translateY }, { scale }]
-          }
-        ]}>
-          <LottieView style={styles.arrowAnim} source={arrowAnim} progress={progress} />
-          <Text category="s1" style={styles.headerText}>Pull down to go back</Text>
-        </Animated.View>
-      </View>
+      {
+        !dismissing && (
+          <View style={styles.headerContainer}>
+            <Animated.View style={[
+              styles.headerAnimTextContainer,
+              {
+                paddingTop: top,
+                opacity,
+                transform: [{ translateY }, { scale }]
+              }
+            ]}>
+              <LottieView style={styles.arrowAnim} source={arrowAnim} progress={progress} />
+              <Text category="s1" style={styles.headerText}>Pull down to go back</Text>
+            </Animated.View>
+          </View>
+        )
+      }
       <Animated.ScrollView
         style={[
           { paddingTop: top + 8 },
@@ -122,18 +128,28 @@ const NftDetailsScreen = observer(function NftDetailsScreen() {
         )}
         scrollEventThrottle={32}
       >
-        <View style={styles.contentContainer}>
-          <SharedElement id={nftId}>
-            <View style={imageContainerStyles}>
-              <HybridImageView
-                videoControls
-                uri={imageUri}
-                higherQualityUri={selectedNft.imageUrlOriginal}
-                resizeMode="contain"
-              />
+        <SharedElement id={nftId}>
+          <View style={imageContainerStyles}>
+            <HybridImageView
+              videoControls
+              uri={imageUri}
+              higherQualityUri={selectedNft.imageUrlOriginal}
+              resizeMode="contain"
+            />
+          </View>
+        </SharedElement>
+        {
+          !dismissing && (
+            <View style={styles.detailsContainer}>
+              <Text category="h4">
+                {selectedNft.name}
+              </Text>
+              <Text category="s1">
+                {selectedNft.collection.description}
+              </Text>
             </View>
-          </SharedElement>
-        </View>
+          )
+        }
       </Animated.ScrollView>
     </View>
   )
@@ -165,7 +181,7 @@ const styleService = StyleService.create({
     flex: 1,
     padding: CONTAINER_PADDING,
   },
-  contentContainer: {
+  detailsContainer: {
 
   },
   nftContainer: {
