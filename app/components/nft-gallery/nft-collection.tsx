@@ -5,7 +5,7 @@ import { View } from 'react-native'
 import Collapsible from 'react-native-collapsible'
 
 import { NFT } from '../../models/entities/nft'
-import { screenWidth, vmin } from '../../utils/dimensions'
+import { screenWidth } from '../../utils/dimensions'
 import { HapticTouchable } from '../haptic-touchable/haptic-touchable'
 import { HybridImageView } from '../hybrid-image-view/hybrid-image-view'
 
@@ -27,24 +27,37 @@ const NFTCollection: React.FC<NFTCollectionProps> = ({ nfts, defaultIsOpen }) =>
   }
 
   const renderNfts = () => {
-    // Chunk to rows of 2
-    // TODO: - On tablet chunks to 3-4 cols
-    const numberOfCols = 2
-    const chunks = chunk(nfts, numberOfCols)
+    const maxImageSize = 200
+    const numberOfCols = Math.floor(screenWidth / maxImageSize)
+    const chunks = chunk(nfts, numberOfCols).map((cols) => {
+      const diff = numberOfCols - cols.length
+      if (diff === 0) {
+        return cols
+      }
+      const newCols = [...cols]
+      for (let i = 0; i < diff; i++) {
+        newCols.push(null)
+      }
+      return newCols
+    })
     return chunks.map((nftRow) => {
       return (
-        <View key={nftRow.map(row => row.name).join('-')} style={styles.row}>
-          {nftRow.map((nft) => {
-            const imageWidth = vmin / nftRow.length - 16
-            const imageUri = nft.imagePreviewUrl || nft.imageUrl || nft.imageUrlOriginal
+        <View key={nftRow.map((row, index) => row ? row.name : `nft-row-${index}`).join('-')} style={styles.row}>
+          {nftRow.map((nft, index) => {
+            const imageWidth = screenWidth / nftRow.length - 16
+            const imageUri = nft ? nft.imagePreviewUrl || nft.imageUrl || nft.imageUrlOriginal : null
 
             return (
-              <HapticTouchable key={nft.name} onPress={() => onSelectNft(nft)}>
+              <HapticTouchable key={nft ? nft.name : `nft-${index}`} onPress={() => onSelectNft(nft)}>
                 <View style={[
                   styles.nftContainer,
                   { width: imageWidth, height: imageWidth }
                 ]}>
-                  <HybridImageView uri={imageUri} />
+                  {
+                    imageUri && (
+                      <HybridImageView uri={imageUri} />
+                    )
+                  }
                 </View>
               </HapticTouchable>
             )

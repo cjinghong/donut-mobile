@@ -12,6 +12,8 @@ const DonutLoader: React.FC = () => {
   const imageStyles = {
     width: vmin * 0.4,
     height: vmin * 0.4,
+    maxWidth: 240,
+    maxHeight: 240,
   }
 
   return (
@@ -39,7 +41,7 @@ const DonutLoader: React.FC = () => {
 const styleService = StyleService.create({
   container: {
     display: 'flex',
-    height: '100%',
+    height: '80%',
     alignItems: 'center',
     justifyContent: 'center',
   },

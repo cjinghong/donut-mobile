@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { ActionSheetIOS, View } from "react-native"
-import { Spinner, StyleService, useStyleSheet } from "@ui-kitten/components"
+import { StyleService, useStyleSheet } from "@ui-kitten/components"
 import Web3 from 'web3'
 import { OpenSeaPort, Network } from 'opensea-js'
 
 import { Screen } from "../../components"
 import { useStores } from "../../models"
 import { truncateStringMiddle } from "../../utils/strings"
-import { NFT } from "../../models/entities/nft"
 import { AddWalletModal } from "../../components/add-wallet-modal/add-wallet-modal"
 import EmptyWallet from "../../components/empty-state/empty-wallet"
 import sampleWallets from "../../utils/sample-wallets"
-import { NftCollection } from "../../components/nft-collection/nft-collection"
 import WalletView from "../../components/wallet-view/wallet-view"
 import { NftGallery } from "../../components/nft-gallery/nft-gallery"
+import DonutLoader from "../../components/donut-loader/donut-loader"
 
 const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io')
 const seaport = new OpenSeaPort(provider, {
@@ -102,8 +101,14 @@ export const WalletScreen = observer(() => {
           onWalletPress={onEditWalletPress}
         />
         <View style={styles.contentContainer}>
-          {/* <NftCollection nfts={nfts} loading={loadingNfts}/> */}
-          <NftGallery nfts={nfts} loading={loadingNfts}/>
+          {
+            loadingNfts ? (
+              <DonutLoader />
+            ) : (
+              // <NftCollection nfts={nfts} loading={loadingNfts}/>
+              <NftGallery nfts={nfts} />
+            )
+          }
         </View>
       </>
     )

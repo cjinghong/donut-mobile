@@ -42,6 +42,8 @@ export const AddWalletModal: React.FC<AddWalletModalProps & BottomModalProps> = 
   const { bottom } = useSafeAreaInsets()
 
   const inputRef = useRef<any>()
+  const [keyboardShown, setKeyboardShown] = useState(false)
+
   const translateY = useRef(new Animated.Value(0)).current
 
   useEffect(() => {
@@ -56,6 +58,7 @@ export const AddWalletModal: React.FC<AddWalletModalProps & BottomModalProps> = 
           easing: Easing.out(Easing.ease)
         }
       ).start()
+      setKeyboardShown(true)
     }
     const keyboardWillHide = (event: KeyboardEvent) => {
       const { duration } = event
@@ -67,6 +70,7 @@ export const AddWalletModal: React.FC<AddWalletModalProps & BottomModalProps> = 
           easing: Easing.in(Easing.ease)
         }
       ).start()
+      setKeyboardShown(false)
     }
     Keyboard.addListener('keyboardWillShow', keyboardWillShow)
     Keyboard.addListener('keyboardWillHide', keyboardWillHide)
@@ -131,7 +135,7 @@ export const AddWalletModal: React.FC<AddWalletModalProps & BottomModalProps> = 
     bottom: 0,
     left: 0,
     right: 0,
-    transform: [{ translateY }]
+    transform: [{ translateY }],
   }
 
   const isAddressValid = ethRegex({ exact: true }).test(walletAddress)
@@ -147,7 +151,15 @@ export const AddWalletModal: React.FC<AddWalletModalProps & BottomModalProps> = 
         <View style={styles.container}>
           <TextInput
             ref={inputRef}
-            style={[styles.text, styles.input]}
+            style={[
+              styles.text,
+              styles.input,
+              {
+                marginTop: keyboardShown
+                  ? heightPercentageToDP('10%')
+                  : heightPercentageToDP('25%'),
+              }
+            ]}
             onChangeText={setWalletAddress}
             value={walletAddress}
             placeholder="Enter a wallet's public key to discover its NFTs..."
@@ -191,10 +203,10 @@ const styleService = StyleService.create({
     justifyContent: 'space-between',
   },
   input: {
-    marginTop: heightPercentageToDP('25%'),
     fontFamily: typography.primary,
     textAlign: 'center',
     fontSize: 21,
+    height: 80,
   },
   pasteButton: {
     display: 'flex',
