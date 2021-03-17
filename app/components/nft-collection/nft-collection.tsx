@@ -22,10 +22,9 @@ const emptyImage = require('./empty.png')
 
 export interface NftCollectionProps {
   nfts: NFT[]
-  loading: boolean
 }
 
-export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts, loading }) => {
+export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts }) => {
   const scrollX = useRef(new Animated.Value(0)).current
   const flatList = useRef<any>()
   const styles = useStyleSheet(styleService)
@@ -153,46 +152,40 @@ export const NftCollection: React.FC<NftCollectionProps> = observer(({ nfts, loa
 
   return (
     <View style={styles.container}>
-      {
-        loading ? (
-          <DonutLoader />
-        ) : (
-          <>
-            {renderBackdrop()}
-            <Animated.FlatList
-              horizontal
-              pagingEnabled
-              removeClippedSubviews
-              ref={flatList}
-              initialNumToRender={5}
-              key={nfts.map(nft => `${nft.tokenAddress}-${nft.tokenId}`).join(',')}
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(item) => `${item.tokenAddress}-${item.tokenId}`}
-              data={nfts}
-              renderItem={renderItem}
-              onScroll={Animated.event(
-                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-                { useNativeDriver: true }
-              )}
-              bounces={!!nfts.length}
-              ListEmptyComponent={(
-                <View style={styles.emptyContainer}>
-                  <Image source={emptyImage} style={styles.emptyImage} />
-                  <Text category="h3" style={[styles.emptyText, styles.emptyTitle]}>Hold right there! 🚨</Text>
-                  <Text category="p1" style={styles.emptyText}>
-                    It seems like you don't own any NFTs. Check out some of the NFTs for
+      <>
+        {renderBackdrop()}
+        <Animated.FlatList
+          horizontal
+          pagingEnabled
+          removeClippedSubviews
+          ref={flatList}
+          initialNumToRender={5}
+          key={nfts.map(nft => `${nft.tokenAddress}-${nft.tokenId}`).join(',')}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item) => `${item.tokenAddress}-${item.tokenId}`}
+          data={nfts}
+          renderItem={renderItem}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+            { useNativeDriver: true }
+          )}
+          bounces={!!nfts.length}
+          ListEmptyComponent={(
+            <View style={styles.emptyContainer}>
+              <Image source={emptyImage} style={styles.emptyImage} />
+              <Text category="h3" style={[styles.emptyText, styles.emptyTitle]}>Hold right there! 🚨</Text>
+              <Text category="p1" style={styles.emptyText}>
+                It seems like you don't own any NFTs. Check out some of the NFTs for
                     sale on <SimpleLink onPress={goToOpenSea}>Open Sea</SimpleLink>.
                   </Text>
-                  <Text category="p1" style={[styles.emptyText, styles.caption]}>
-                    The <Text style={styles.bold}>Donut NFT dealer</Text> is still a work-in-progress. You can learn more about our
+              <Text category="p1" style={[styles.emptyText, styles.caption]}>
+                The <Text style={styles.bold}>Donut NFT dealer</Text> is still a work-in-progress. You can learn more about our
                     roadmap <SimpleLink onPress={goToRoadmap}>here</SimpleLink>.
                   </Text>
-                </View>
-              )}
-            />
-          </>
-        )
-      }
+            </View>
+          )}
+        />
+      </>
     </View>
   )
 })
