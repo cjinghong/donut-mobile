@@ -2,9 +2,10 @@ import React, { useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { StyleService, Text, useStyleSheet } from "@ui-kitten/components"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/core"
-import { ScrollView, Image, View, NativeScrollEvent, NativeSyntheticEvent, Animated } from "react-native"
+import { Image, View, NativeScrollEvent, NativeSyntheticEvent, Animated } from "react-native"
 import { SharedElement } from "react-navigation-shared-element"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import LottieView from 'lottie-react-native'
 
 import { useStores } from "../../models"
 import { HybridImageView } from "../../components/hybrid-image-view/hybrid-image-view"
@@ -12,6 +13,7 @@ import { screenWidth } from "../../utils/dimensions"
 import { HomeParamList } from "../../navigation/home-navigator"
 import { color } from "../../theme"
 
+const arrowAnim = require('./arrow-anim.json')
 const CONTAINER_PADDING = 16
 const SCROLL_DISMISS_THRESHOLD = 170
 
@@ -79,9 +81,8 @@ const NftDetailsScreen = observer(function NftDetailsScreen() {
 
   const translateY = scrollY.interpolate({
     inputRange: [-SCROLL_DISMISS_THRESHOLD, -SCROLL_DISMISS_THRESHOLD + 70, 0],
-    outputRange: [SCROLL_DISMISS_THRESHOLD - 50, 50, -100],
+    outputRange: [SCROLL_DISMISS_THRESHOLD / 2, 20, -100],
   })
-
   const scale = scrollY.interpolate({
     inputRange: [-SCROLL_DISMISS_THRESHOLD, -SCROLL_DISMISS_THRESHOLD + 70, 0],
     outputRange: [1, 0.9, 0.1],
@@ -90,16 +91,24 @@ const NftDetailsScreen = observer(function NftDetailsScreen() {
     inputRange: [-SCROLL_DISMISS_THRESHOLD + 50, -SCROLL_DISMISS_THRESHOLD + 70, 0],
     outputRange: [1, 0.5, 0],
   })
+  const progress = scrollY.interpolate({
+    inputRange: [-SCROLL_DISMISS_THRESHOLD, 10],
+    outputRange: [0.7, 0],
+  })
 
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Animated.View style={{
-          paddingTop: top,
-          opacity,
-          transform: [{ translateY }, { scale }]
-        }}>
-          <Text category="h5" style={styles.headerText}>Pull down to go back</Text>
+        <Animated.View style={[
+          styles.headerAnimTextContainer,
+          {
+            paddingTop: top,
+            opacity,
+            transform: [{ translateY }, { scale }]
+          }
+        ]}>
+          <LottieView style={styles.arrowAnim} source={arrowAnim} progress={progress} />
+          <Text category="s1" style={styles.headerText}>Pull down to go back</Text>
         </Animated.View>
       </View>
       <Animated.ScrollView
@@ -137,6 +146,13 @@ const styleService = StyleService.create({
     left: 0,
     right: 0,
     alignItems: 'center',
+  },
+  headerAnimTextContainer: {
+    alignItems: 'center'
+  },
+  arrowAnim: {
+    width: 56,
+    height: 56,
   },
   headerText: {
     color: 'color-primary-500'
