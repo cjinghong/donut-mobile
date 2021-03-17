@@ -32,7 +32,7 @@ export const HomeNavigator = observer(() => {
     const animConfig = {
       animation: 'timing',
       config: {
-        duration: 200, easing: Easing.inOut(Easing.linear)
+        duration: 300, easing: Easing.inOut(Easing.linear)
       }
     }
     return {

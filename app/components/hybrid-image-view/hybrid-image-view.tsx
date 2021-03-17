@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useState } from "react"
 import { Image, StyleSheet, View, ViewStyle } from "react-native"
 import FastImage, { ImageStyle, ResizeMode } from "react-native-fast-image"
 import { Styles, SvgCssUri } from "react-native-svg"
@@ -7,12 +7,13 @@ import Video from 'react-native-video'
 const loadingImg = require("./loading.gif")
 
 export interface HybridImageViewProps {
+  uri: string
   containerStyle?: ViewStyle
   imageStyle?: ImageStyle | Styles
   resizeMode?: ResizeMode
   /// If provided, will attempt to load the higher quality uri after image finished loading.
   higherQualityUri?: string
-  uri: string
+  videoControls?: boolean,
 }
 
 type FileType = 'video' | 'image' | 'svg'
@@ -36,45 +37,44 @@ export const HybridImageView: React.FC<HybridImageViewProps> = ({
   resizeMode,
   higherQualityUri,
   uri,
+  videoControls
 }) => {
-  const fileType = getFileType(uri)
-  const [currentUri, setCurrentUri] = useState(fileType === 'image' ? uri : (higherQualityUri || uri))
-
   // Other than images, its always loaded
-  const [imgLoaded, setImgLoaded] = useState(fileType !== 'image')
+  const [imgLoaded, setImgLoaded] = useState(getFileType(uri) !== 'image')
 
-  const onLoad = () => {
+  const onNormalUriLoaded = () => {
     setImgLoaded(true)
-    if (higherQualityUri && currentUri !== higherQualityUri) {
-      setCurrentUri(higherQualityUri)
-    }
   }
 
-  let imgElem: Element
-  if (fileType === 'svg') {
-    imgElem = (
-      <SvgCssUri
-        uri={currentUri}
-        style={[styles.image, imageStyle]}
-        fill={"black"}
-      />
-    )
-  } else if (fileType === 'video') {
-    imgElem = (
-      <Video source={{ uri: currentUri }} // Can be a URL or a local file.
-        muted
-        repeat
-        style={[styles.image, imageStyle]}
+  const renderImgElem = (url: string, defaultStyle: any, onLoad?: () => void) => {
+    const fileType = getFileType(uri)
+    if (fileType === 'svg') {
+      return (
+        <SvgCssUri
+          uri={url}
+          style={[defaultStyle, imageStyle]}
+          fill={"black"}
+        />
+      )
+    } else if (fileType === 'video') {
+      return (
+        <Video
+          muted
+          repeat
+          controls={!!videoControls}
+          source={{ uri: url }}
+          style={[defaultStyle, imageStyle]}
+          resizeMode={resizeMode}
+        />
+      )
+    } else {
+      return <FastImage
+        source={{ uri: url, priority: FastImage.priority.normal }}
+        style={[defaultStyle, imageStyle]}
+        onLoadEnd={onLoad}
         resizeMode={resizeMode}
       />
-    )
-  } else {
-    imgElem = <FastImage
-      source={{ uri: currentUri, priority: FastImage.priority.normal }}
-      style={[styles.image, imageStyle]}
-      onLoadEnd={onLoad}
-      resizeMode={resizeMode}
-    />
+    }
   }
 
   return (
@@ -84,7 +84,10 @@ export const HybridImageView: React.FC<HybridImageViewProps> = ({
           <Image source={loadingImg} style={styles.backgroundImage} />
         )
       }
-      {imgElem}
+      {renderImgElem(uri, styles.image, onNormalUriLoaded)}
+      {
+        higherQualityUri && renderImgElem(higherQualityUri, styles.highQualityImage)
+      }
     </View>
   )
 }
@@ -100,6 +103,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'center'
+  },
+  highQualityImage: {
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
   },
   image: {
     height: '100%',
