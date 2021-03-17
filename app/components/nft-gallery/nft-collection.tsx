@@ -23,7 +23,7 @@ const NFTCollection: React.FC<NFTCollectionProps> = ({ nfts, defaultIsOpen }) =>
   const collectionName = nfts[0].collection.name
 
   const onSelectNft = (nft: NFT) => {
-    console.log('selected', nft.name)
+    console.log(nft.name)
   }
 
   const renderNfts = () => {
@@ -42,13 +42,27 @@ const NFTCollection: React.FC<NFTCollectionProps> = ({ nfts, defaultIsOpen }) =>
     })
     return chunks.map((nftRow) => {
       return (
-        <View key={nftRow.map((row, index) => row ? row.name : `nft-row-${index}`).join('-')} style={styles.row}>
+        <View
+          key={nftRow.map((row, index) => row ? row.name : `nft-row-placeholder-${index}`).join('-')}
+          style={styles.row}
+        >
           {nftRow.map((nft, index) => {
             const imageWidth = screenWidth / nftRow.length - 16
-            const imageUri = nft ? nft.imagePreviewUrl || nft.imageUrl || nft.imageUrlOriginal : null
 
+            // Return invisible placeholder view
+            // if no NFT is available
+            if (!nft) {
+              return (
+                <View key={`nft-placeholder-${index}`} style={[
+                  styles.nftContainer,
+                  { width: imageWidth, height: imageWidth }
+                ]} />
+              )
+            }
+
+            const imageUri = nft.imagePreviewUrl || nft.imageUrl || nft.imageUrlOriginal
             return (
-              <HapticTouchable key={nft ? nft.name : `nft-${index}`} onPress={() => onSelectNft(nft)}>
+              <HapticTouchable key={nft.name} onPress={() => onSelectNft(nft)}>
                 <View style={[
                   styles.nftContainer,
                   { width: imageWidth, height: imageWidth }

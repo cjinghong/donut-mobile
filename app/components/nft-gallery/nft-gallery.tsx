@@ -79,8 +79,7 @@ const styleService = StyleService.create({
   emptyContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 16,
-    width: screenWidth,
+    padding: 32,
   },
   emptyImage: {
     resizeMode: 'contain',
