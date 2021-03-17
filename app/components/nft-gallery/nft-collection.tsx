@@ -1,21 +1,30 @@
 import { Icon, StyleService, Text, useStyleSheet } from '@ui-kitten/components'
 import { chunk } from 'lodash'
 import React, { useState } from 'react'
-import { StyleSheet, View, TouchableOpacity } from 'react-native'
+import { View } from 'react-native'
 import Collapsible from 'react-native-collapsible'
 
 import { NFT } from '../../models/entities/nft'
 import { screenWidth, vmin } from '../../utils/dimensions'
+import { HapticTouchable } from '../haptic-touchable/haptic-touchable'
 import { HybridImageView } from '../hybrid-image-view/hybrid-image-view'
 
-interface NFTItemProps {
+interface NFTCollectionProps {
   nfts: NFT[]
+  /// If true, the accordion is opened by default
+  defaultIsOpen?: boolean
 }
 
-const NFTCollectionItem: React.FC<NFTItemProps> = ({ nfts }) => {
+const NFTCollection: React.FC<NFTCollectionProps> = ({ nfts, defaultIsOpen }) => {
   const styles = useStyleSheet(styleService)
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(defaultIsOpen || false)
+  const [currentFont, setCurrentFont] = useState(24)
+
   const collectionName = nfts[0].collection.name
+
+  const onSelectNft = (nft: NFT) => {
+    console.log('selected', nft.name)
+  }
 
   const renderNfts = () => {
     // Chunk to rows of 2
@@ -28,13 +37,16 @@ const NFTCollectionItem: React.FC<NFTItemProps> = ({ nfts }) => {
           {nftRow.map((nft) => {
             const imageWidth = vmin / nftRow.length - 16
             const imageUri = nft.imagePreviewUrl || nft.imageUrl || nft.imageUrlOriginal
+
             return (
-              <View key={nft.name} style={[
-                styles.nftContainer,
-                { width: imageWidth, height: imageWidth }
-              ]}>
-                <HybridImageView uri={imageUri} />
-              </View>
+              <HapticTouchable key={nft.name} onPress={() => onSelectNft(nft)}>
+                <View style={[
+                  styles.nftContainer,
+                  { width: imageWidth, height: imageWidth }
+                ]}>
+                  <HybridImageView uri={imageUri} />
+                </View>
+              </HapticTouchable>
             )
           })}
         </View>
@@ -44,9 +56,19 @@ const NFTCollectionItem: React.FC<NFTItemProps> = ({ nfts }) => {
 
   return (
     <View>
-      <TouchableOpacity onPress={() => setIsOpen(!isOpen)}>
+      <HapticTouchable onPress={() => setIsOpen(!isOpen)}>
         <View style={styles.container}>
-          <Text category="h4">
+          <Text
+            category="h4"
+            style={[styles.titleText, { fontSize: currentFont }]}
+            adjustsFontSizeToFit
+            onTextLayout={(e) => {
+              const { lines } = e.nativeEvent
+              if (lines.length > 1) {
+                setCurrentFont(currentFont - 1)
+              }
+            }}
+          >
             {collectionName}
           </Text>
           <View style={{
@@ -58,9 +80,9 @@ const NFTCollectionItem: React.FC<NFTItemProps> = ({ nfts }) => {
             />
           </View>
         </View>
-      </TouchableOpacity>
+      </HapticTouchable>
 
-      <Collapsible collapsed={!isOpen}>
+      <Collapsible style={styles.collapsible} collapsed={!isOpen}>
         {renderNfts()}
       </Collapsible>
     </View>
@@ -73,31 +95,34 @@ const styleService = StyleService.create({
     width: 32,
   },
   container: {
-    borderBottomWidth: 1,
-    borderBottomColor: 'color-gray-500',
+    borderTopWidth: 1,
+    borderTopColor: 'color-gray-500',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 16,
-    paddingVertical: 32
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 32,
+    overflow: 'hidden'
+  },
+  collapsible: {
+    paddingVertical: 8
+  },
+  titleText: {
+    width: screenWidth - 32 - 16 - 16,
   },
   row: {
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   nftContainer: {
     flex: 1,
-    margin: 8,
+    margin: 4,
     borderRadius: 20,
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOpacity: 0.3,
-    shadowOffset: {
-      width: 0,
-      height: 0
-    },
-    shadowRadius: 20
   }
 })
 
-export default NFTCollectionItem
+export default NFTCollection

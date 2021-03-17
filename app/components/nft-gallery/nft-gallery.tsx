@@ -1,16 +1,13 @@
-import React, { useState } from "react"
-import { ViewStyle, ListRenderItemInfo } from "react-native"
+import React from "react"
+import { ListRenderItemInfo, FlatList } from "react-native"
 import { observer } from "mobx-react-lite"
-
-import { StyleService, useStyleSheet } from '@ui-kitten/components'
+import { groupBy } from "ramda"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import { NFT } from "../../models/entities/nft"
-import { groupBy } from "ramda"
-import { FlatList } from "react-native-gesture-handler"
-import NFTCollectionItem from "./nft-collection-item"
+import NFTCollection from "./nft-collection"
 
 export interface NftGalleryProps {
-  style?: ViewStyle
   nfts: NFT[]
   loading: boolean
 }
@@ -18,16 +15,17 @@ export interface NftGalleryProps {
 /**
  * Describe your component here
  */
-export const NftGallery: React.FC<NftGalleryProps> = observer(({ style, nfts }) => {
+export const NftGallery: React.FC<NftGalleryProps> = observer(({ nfts }) => {
+  const { bottom } = useSafeAreaInsets()
   const groupedNfts = groupBy((obj: NFT) => {
     return obj.collection.name
   }, nfts)
 
   const renderItem = (info: ListRenderItemInfo<string>) => {
-    const { item } = info
+    const { item, index } = info
     const nfts = groupedNfts[item]
     return (
-      <NFTCollectionItem nfts={nfts} />
+      <NFTCollection nfts={nfts} defaultIsOpen={index === 0}/>
     )
   }
 
@@ -37,6 +35,7 @@ export const NftGallery: React.FC<NftGalleryProps> = observer(({ style, nfts }) 
       data={Object.keys(groupedNfts)}
       keyExtractor={(item) => item}
       renderItem={renderItem}
+      contentContainerStyle={{ paddingBottom: bottom }}
     />
   )
 })
