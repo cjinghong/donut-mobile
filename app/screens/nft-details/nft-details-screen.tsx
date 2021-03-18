@@ -69,7 +69,7 @@ const NftDetailsScreen = observer(function NftDetailsScreen() {
     const { contentOffset } = nativeEvent
     const { y } = contentOffset
 
-    if (y <= -SCROLL_DISMISS_THRESHOLD) {
+    if (y <= -SCROLL_DISMISS_THRESHOLD && !dismissing) {
       setDismissing(true)
       navigation.goBack()
     }
