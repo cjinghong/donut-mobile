@@ -9,9 +9,10 @@ import LottieView from 'lottie-react-native'
 
 import { useStores } from "../../models"
 import { HybridImageView } from "../../components/hybrid-image-view/hybrid-image-view"
-import { screenWidth } from "../../utils/dimensions"
+import { screenHeight, screenWidth } from "../../utils/dimensions"
 import { HomeParamList } from "../../navigation/home-navigator"
 import { color } from "../../theme"
+import TraitTag from "../../components/trait-tag/trait-tag"
 
 const arrowAnim = require('./arrow-anim.json')
 const CONTAINER_PADDING = 16
@@ -20,7 +21,7 @@ const SCROLL_DISMISS_THRESHOLD = 150
 const NftDetailsScreen = observer(function NftDetailsScreen() {
   const styles = useStyleSheet(styleService)
   const navigation = useNavigation()
-  const { top } = useSafeAreaInsets()
+  const { top, bottom } = useSafeAreaInsets()
   const { nfts } = useStores()
   const scrollY = useRef(new Animated.Value(0)).current
 
@@ -118,10 +119,11 @@ const NftDetailsScreen = observer(function NftDetailsScreen() {
         )
       }
       <Animated.ScrollView
-        style={[
-          { paddingTop: top + 8 },
-          styles.scrollView
-        ]}
+        style={styles.scrollView}
+        contentContainerStyle={{
+          paddingTop: top,
+          paddingBottom: bottom + CONTAINER_PADDING
+        }}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: true, listener: onScroll }
@@ -140,11 +142,22 @@ const NftDetailsScreen = observer(function NftDetailsScreen() {
         </SharedElement>
         {
           !dismissing && (
-            <View style={styles.detailsContainer}>
+            <View style={styles.text}>
               <Text category="h4">
                 {selectedNft.name}
               </Text>
-              <Text category="s1">
+              {
+                selectedNft.traits.length && (
+                  <View>
+                    <Text category="h6" style={styles.text}>Traits</Text>
+                    <View style={styles.traitsContainer}>
+                      {selectedNft.traits.map(t => (<TraitTag key={t.trait_type} trait={t} />))}
+                    </View>
+                  </View>
+                )
+              }
+              <Text category="h6" style={styles.text}>Description</Text>
+              <Text category="s1" style={styles.subtext}>
                 {selectedNft.collection.description}
               </Text>
             </View>
@@ -181,12 +194,20 @@ const styleService = StyleService.create({
     flex: 1,
     padding: CONTAINER_PADDING,
   },
-  detailsContainer: {
-
-  },
   nftContainer: {
     overflow: 'hidden',
     borderRadius: 20
+  },
+  text: {
+    paddingTop: 16
+  },
+  subtext: {
+    paddingTop: 8
+  },
+  traitsContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginLeft: -8,
   },
 })
 

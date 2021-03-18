@@ -8,6 +8,11 @@ import { Instance, types } from "mobx-state-tree"
 //     username: types.string
 //   }))
 // })
+export const NFTTraitModel = types.model({
+  trait_type: types.maybeNull(types.string),
+  trait_count: types.maybeNull(types.number),
+  value: types.maybeNull(types.union(types.string, types.number)),
+})
 
 export const NFTModel = types.model({
   // Unique generated id based on the tokenId and the tokenAddress
@@ -31,11 +36,7 @@ export const NFTModel = types.model({
     featuredImageUrl: types.maybeNull(types.string),
     largeImageUrl: types.maybeNull(types.string),
   }),
-  traits: types.maybeNull(types.array(types.model({
-    trait_type: types.maybeNull(types.string),
-    trait_count: types.maybeNull(types.number),
-    value: types.maybeNull(types.union(types.string, types.number)),
-  }))),
+  traits: types.maybeNull(types.array(NFTTraitModel)),
   // lastSale: types.maybeNull(types.model({
   //   eventType: types.enumeration([
   //     "created",
@@ -83,3 +84,4 @@ export const NFTModel = types.model({
 })
 
 export interface NFT extends Instance<typeof NFTModel> { }
+export interface NFTTrait extends Instance<typeof NFTTraitModel> { }

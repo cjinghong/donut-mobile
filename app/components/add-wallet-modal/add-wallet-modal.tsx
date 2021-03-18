@@ -22,6 +22,7 @@ import { HapticButton } from "../haptic-button/haptic-button"
 import { HapticTouchable } from "../haptic-touchable/haptic-touchable"
 import { Text } from "../text/text"
 import { useStores } from "../../models"
+import { existsIn } from "../../utils/wallet"
 
 export interface AddWalletModalProps {
   showSampleWallet: boolean
@@ -139,6 +140,9 @@ export const AddWalletModal: React.FC<AddWalletModalProps & BottomModalProps> = 
   }
 
   const isAddressValid = ethRegex({ exact: true }).test(walletAddress)
+  const isWalletExists = existsIn(walletAddress, wallets)
+
+  console.log(wallets, walletAddress)
 
   return (
     <BottomModal
@@ -174,7 +178,16 @@ export const AddWalletModal: React.FC<AddWalletModalProps & BottomModalProps> = 
                 <Text style={[styles.text, styles.pasteText]}>Paste</Text>
               </View>
             </HapticTouchable>
-            <HapticButton disabled={!isAddressValid} size="large" onPress={onAddWallet}>Add Wallet</HapticButton>
+            <HapticButton
+              disabled={!isAddressValid || isWalletExists}
+              size="large"
+              onPress={onAddWallet}>
+              {
+                !isAddressValid ? 'Invalid address'
+                  : isWalletExists ? 'Wallet already exists'
+                    : 'Add Wallet'
+              }
+            </HapticButton>
             {
               showSampleWallet && (
                 <HapticTouchable onPress={onAddSampleWallet}>
