@@ -47,11 +47,13 @@ export const WalletScreen = observer(() => {
             id: `${a.tokenId}-${a.tokenAddress}`
           })) as any
         )
+        // console.log(assets.filter(a => a.imageUrl.includes('mp4')))
       } catch (error) {
         console.log('error', error)
       }
       setLoadingNfts(false)
     }
+
     if (wallets.length) {
       loadNfts()
     }
@@ -113,7 +115,6 @@ export const WalletScreen = observer(() => {
             loadingNfts ? (
               <DonutLoader />
             ) : (
-              // <NftCollection nfts={nfts} loading={loadingNfts}/>
               <NftGallery nfts={nfts} />
             )
           }

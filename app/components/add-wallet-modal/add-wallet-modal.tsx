@@ -142,8 +142,6 @@ export const AddWalletModal: React.FC<AddWalletModalProps & BottomModalProps> = 
   const isAddressValid = ethRegex({ exact: true }).test(walletAddress)
   const isWalletExists = existsIn(walletAddress, wallets)
 
-  console.log(wallets, walletAddress)
-
   return (
     <BottomModal
       avoidKeyboard={false}

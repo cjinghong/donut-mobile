@@ -158,6 +158,10 @@ const NftDetailsScreen = observer(function NftDetailsScreen() {
               }
               <Text category="h6" style={styles.text}>Description</Text>
               <Text category="s1" style={styles.subtext}>
+                {selectedNft.description}
+              </Text>
+              <Text category="h6" style={styles.text}>About</Text>
+              <Text category="s1" style={styles.subtext}>
                 {selectedNft.collection.description}
               </Text>
             </View>

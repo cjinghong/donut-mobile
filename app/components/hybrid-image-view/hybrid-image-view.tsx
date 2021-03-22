@@ -103,7 +103,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     display: 'flex',
-    justifyContent: 'center'
   },
   highQualityImage: {
     bottom: 0,
